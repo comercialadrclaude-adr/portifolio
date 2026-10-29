@@ -56,6 +56,8 @@ describe('métricas', () => {
   });
 });
 
+const HASH_BASE_REFERENCIA = 'ed1af2909c9dc03cfa9a4dcc68c7c647af8e674aa28583ffacec69b88bca7b57';
+
 const dir = resolve(process.env.DATA_DIR ?? 'public/data');
 const temDados = existsSync(resolve(dir, 'indicadores.json'));
 const ler = <T>(n: string): T => JSON.parse(readFileSync(resolve(dir, n), 'utf-8')) as T;
@@ -72,8 +74,9 @@ describe.skipIf(!temDados)(`dados gerados em ${dir}`, () => {
     expect(r.completude_pct).toBeCloseTo(ind.completude_pct, 1);
   });
 
-  it('valores de referência da seção 4 (dados reais)', () => {
-    if (ler<Manifest>('manifest.json').sintetico) return;
+  it('valores de referência da seção 4 (só com a base do escopo)', () => {
+    // Mesmo hash de scripts/tests/test_referencia.py. Base atualizada: totais mudam, não é erro.
+    if (ler<Manifest>('manifest.json').base_hash !== HASH_BASE_REFERENCIA) return;
     const ind = ler<Indicadores>('indicadores.json');
     expect(ind.todos.trechos).toBe(5480);
     expect(ind.todos.rede_km).toBeCloseTo(1198.2, 1);

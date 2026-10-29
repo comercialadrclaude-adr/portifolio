@@ -1,8 +1,23 @@
-"""Valores de referência da seção 4 do escopo (só roda com os KMZ reais em data/raw/)."""
+"""Valores de referência da seção 4 do escopo.
+
+Os números valem para a versão da base usada no escopo (out/2026). Rodam só quando os
+KMZ reais estão em data/raw/ e a base é exatamente essa versão, identificada pelo hash
+de atributos + coordenadas (manifest.base_hash). Com uma base atualizada, os testes
+são pulados: novas extensões mudam os totais e isso não é erro.
+"""
 
 import json
 
 import pytest
+
+# Hash da base cadastral do escopo (5.480 trechos, LAST_EDI_1 até 12/03/2025).
+HASH_BASE_REFERENCIA = "ed1af2909c9dc03cfa9a4dcc68c7c647af8e674aa28583ffacec69b88bca7b57"
+
+
+@pytest.fixture(autouse=True)
+def _so_com_a_base_de_referencia(real_saida):
+    if real_saida["manifest"]["base_hash"] != HASH_BASE_REFERENCIA:
+        pytest.skip("Base cadastral diferente da usada no escopo: valores de referência não se aplicam.")
 
 
 def carregar(saida, nome):
