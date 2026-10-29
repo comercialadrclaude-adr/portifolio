@@ -1,0 +1,65 @@
+/* Tokens de cor (seção 7.1). Única fonte de cor do produto: Tailwind, mapa e gráficos leem daqui. */
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f5f7f9;
+  --surface: #ffffff;
+  --surface-2: #eef2f5;
+  --border: #dde3e8;
+  --text: #13212c;
+  --text-muted: #5a6b78;
+  --brand: #0b4f71;
+  --on-brand: #ffffff;
+  --header-bg: #0b4f71;
+  --header-text: #ffffff;
+  --header-muted: #c5d9e4;
+  --net-existing: #a7b4bf;
+  --net-extension: #0e9f8e;
+  --net-improvement: #5b5fc7;
+  --project: #e2582f;
+  --zeis: #e8a93a;
+  --ok: #1f8a55;
+  --warn: #b97800;
+  --bad: #c2362b;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0e151b;
+  --surface: #151f27;
+  --surface-2: #1c2832;
+  --border: #2a3843;
+  --text: #e6edf2;
+  --text-muted: #93a4b1;
+  --brand: #5bb3da;
+  --on-brand: #0e151b;
+  --header-bg: #151f27;
+  --header-text: #e6edf2;
+  --header-muted: #93a4b1;
+  --net-existing: #4f5f6b;
+  --net-extension: #2cc7b4;
+  --net-improvement: #8f93f0;
+  --project: #ff7a50;
+  --zeis: #f2be5c;
+  --ok: #45c487;
+  --warn: #e5a93b;
+  --bad: #f06a5e;
+}
+
+/* Antes do JS aplicar o tema, segue o sistema. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --bg: #0e151b;
+    --surface: #151f27;
+    --surface-2: #1c2832;
+    --border: #2a3843;
+    --text: #e6edf2;
+    --text-muted: #93a4b1;
+    --brand: #5bb3da;
+    --on-brand: #0e151b;
+    --header-bg: #151f27;
+    --header-text: #e6edf2;
+    --header-muted: #93a4b1;
+  }
+}

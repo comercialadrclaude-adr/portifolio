@@ -14,7 +14,9 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "data": "python scripts/build_dataset.py",
-    "data:fixture": "python scripts/tests/make_fixture.py .fixture/raw && python scripts/build_dataset.py --raw .fixture/raw --out .fixture/data --modo completo"
+    "data:fixture": "python scripts/tests/make_fixture.py .fixture/raw && python scripts/build_dataset.py --raw .fixture/raw --out .fixture/data --modo completo --sintetico --meta .fixture/sem_meta.json",
+    "dev:fixture": "DATA_DIR=.fixture/data vite",
+    "test:py": "python -m pytest"
   },
   "dependencies": {
     "@tanstack/react-table": "8.21.3",
