@@ -66,6 +66,13 @@ REGRAS: list[Regra] = [
         lambda t: not t["extensao_m"],
     ),
     Regra(
+        "material_chumbo",
+        "Material cadastrado como chumbo",
+        MEDIA,
+        "Confirmar em campo: chumbo em rede de distribuição é atípico e, se real, exige substituição.",
+        lambda t: (t["material_codigo"] or "").casefold() == "chumbo",
+    ),
+    Regra(
         "sem_bairro",
         "Bairro não informado",
         MEDIA,

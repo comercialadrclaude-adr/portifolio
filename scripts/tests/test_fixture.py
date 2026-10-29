@@ -73,6 +73,7 @@ def test_inconsistencias(fixture_saida):
     assert i["pavimento_grafia"]["total"] == 2
     assert i["link_local"]["total"] == 1
     assert i["material_fora_padrao"]["total"] == 1
+    assert i["material_chumbo"]["total"] == 1
     trechos = {t["id"] for t in carregar(fixture_saida, "trechos.json")}
     assert set(i["sem_material"]["trechos"]) <= trechos
 
