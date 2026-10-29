@@ -16,6 +16,8 @@ export interface Manifest {
   dados_ate: string | null;
   gerado_em: string;
   base_usada: string | null;
+  /** Hash de atributos + coordenadas da base (identifica a versão). */
+  base_hash: string | null;
   avisos: string[];
   fontes: { arquivo: string; sha256: string; tipo: string; feicoes: number }[];
   contagens: Record<string, number | Record<string, number>>;

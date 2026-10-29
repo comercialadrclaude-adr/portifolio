@@ -104,3 +104,37 @@ def test_idempotente(tmp_path, fixture_saida):
     m1 = (tmp_path / "manifest.json").read_text()
     build_dataset.escrever(build_dataset.construir(fixture_saida["raw"], "completo", tmp_path / "x.json"), tmp_path)
     assert (tmp_path / "manifest.json").read_text() == m1
+
+
+def test_base_mais_recente_vence_copias_antigas(tmp_path, fixture_saida):
+    """Uma exportação nova junto com várias cópias antigas: vale a mais recente."""
+    import shutil
+    import zipfile
+
+    import build_dataset
+
+    raw = tmp_path / "raw"
+    shutil.copytree(fixture_saida["raw"], raw)
+    with zipfile.ZipFile(raw / "1002") as z:
+        kml = z.read("doc.kml").decode("utf-8")
+    nova = kml.replace("2024/04/01", "2024/06/01").replace(
+        '<SimpleData name="EXTENSAO">100</SimpleData>', '<SimpleData name="EXTENSAO">150</SimpleData>', 1
+    )
+    assert nova != kml
+    with zipfile.ZipFile(raw / "3001", "w") as z:
+        z.writestr("doc.kml", nova)
+
+    r = build_dataset.construir(raw, "agregado", tmp_path / "sem_meta.json")
+    m = r["manifest"]
+    assert m["base_usada"] == "3001"  # 1 cópia nova vence 3 antigas (1001, 1002, 1003)
+    assert r["saidas"]["indicadores.json"]["todos"]["rede_km"] == pytest.approx(4.65, abs=0.001)
+    assert any("versões diferentes" in a for a in m["avisos"])
+    usos = {p["arquivo"]: p for p in r["saidas"]["portfolio.json"]}
+    assert usos["3001"]["uso"] == "Referência"
+    assert usos["1002"]["conteudo"] == "Base cadastral (versão anterior)"
+    assert usos["1001"]["uso"] == "Projeto"  # o projeto continua valendo
+
+
+def test_manifest_identifica_versao_da_base(fixture_saida):
+    m = fixture_saida["manifest"]
+    assert m["base_hash"] and len(m["base_hash"]) == 64

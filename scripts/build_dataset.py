@@ -127,27 +127,41 @@ def pct(parte: float, total: float) -> float:
 # --- Rede ------------------------------------------------------------------
 
 
+def ultima_edicao(f: Fonte) -> date:
+    """Data mais recente de edição ou cadastro entre os trechos da base."""
+    datas = (
+        L.data(t.atributos.get(campo))
+        for t in f.trechos_base
+        for campo in ("LAST_EDI_1", "CREATED_DA")
+    )
+    return max((d for d in datas if d), default=date.min)
+
+
 def escolher_base(fontes: list[Fonte]) -> tuple[Fonte | None, dict[str, str], list[str]]:
-    """Agrupa as cópias da base por hash e escolhe uma. Devolve (fonte, hashes, avisos)."""
+    """Agrupa as cópias da base por hash e escolhe uma. Devolve (fonte, hashes, avisos).
+
+    Vence a versão com a edição mais recente, mesmo que versões antigas apareçam em
+    mais arquivos (ex.: projetos desenhados sobre uma cópia antiga da base). Entre
+    cópias da mesma versão, prefere uma pura (sem projeto desenhado).
+    """
     com_base = [f for f in fontes if f.trechos_base]
     hashes = {f.arquivo: hash_base(f.trechos_base) for f in com_base}
-    avisos: list[str] = []
     if not com_base:
         return None, hashes, ["Nenhuma base cadastral encontrada."]
     grupos = Counter(hashes.values())
-    if len(grupos) > 1:
-        avisos.append(
-            f"{len(grupos)} versões diferentes da base cadastral; usada a mais frequente/recente."
-        )
-
-    def ultima_edicao(f: Fonte) -> str:
-        return max((t.atributos.get("LAST_EDI_1", "") for t in f.trechos_base), default="")
-
+    edicao = {f.arquivo: ultima_edicao(f) for f in com_base}
     escolhida = max(
         com_base,
-        # prefere uma cópia pura (sem projeto desenhado) como referência
-        key=lambda f: (grupos[hashes[f.arquivo]], ultima_edicao(f), not f.soltas, len(f.trechos_base)),
+        key=lambda f: (edicao[f.arquivo], grupos[hashes[f.arquivo]], not f.soltas, len(f.trechos_base)),
     )
+    avisos: list[str] = []
+    if len(grupos) > 1:
+        anteriores = sorted(f.arquivo for f in com_base if hashes[f.arquivo] != hashes[escolhida.arquivo])
+        avisos.append(
+            f"{len(grupos)} versões diferentes da base cadastral. Usada a de edição mais recente "
+            f"({escolhida.arquivo}, {edicao[escolhida.arquivo].strftime('%d/%m/%Y')}). "
+            f"Com versão anterior: {', '.join(anteriores)}."
+        )
     return escolhida, hashes, avisos
 
 
@@ -613,6 +627,8 @@ def construir(raw: Path, modo: str, meta_path: Path, sintetico: bool = False) ->
             if hashes[f.arquivo] == hash_usado and not ja_referencia and base and base.arquivo == f.arquivo:
                 uso, conteudo = "Referência", "Base cadastral (cópia usada no painel)"
                 ja_referencia = True
+            elif hashes[f.arquivo] != hash_usado:
+                uso, conteudo = "Arquivar", "Base cadastral (versão anterior)"
             else:
                 uso, conteudo = "Arquivar", "Base cadastral duplicada"
                 dup = base.arquivo if base else None
@@ -712,6 +728,8 @@ def construir(raw: Path, modo: str, meta_path: Path, sintetico: bool = False) ->
         "sintetico": sintetico,
         "dados_ate": ultima.isoformat() if ultima else None,
         "base_usada": base.arquivo if base else None,
+        # hash de atributos + coordenadas: identifica a versão da base, mesmo reexportada
+        "base_hash": hash_usado,
         "avisos": avisos,
         "fontes": [
             {"arquivo": f.arquivo, "sha256": f.sha256, "tipo": tipos[f.arquivo], "feicoes": len(f.feicoes)}

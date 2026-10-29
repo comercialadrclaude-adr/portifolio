@@ -46,7 +46,7 @@ DATA_DIR=.fixture/real npm run dev
 
 ## Como atualizar os dados
 
-1. Exporte a camada atualizada do GIS (ou os KMZ do Google Earth) para `data/raw/`. A pasta é ignorada pelo git, porque os arquivos brutos têm e-mails de funcionários e links internos. Os arquivos podem vir sem extensão: o pipeline identifica KMZ/KML pelo conteúdo.
+1. Exporte a camada atualizada do GIS (ou os KMZ do Google Earth) para `data/raw/`. A pasta é ignorada pelo git, porque os arquivos brutos têm e-mails de funcionários e links internos. Os arquivos podem vir sem extensão: o pipeline identifica KMZ/KML pelo conteúdo. Se uma exportação nova ficar junto com cópias antigas da base, vale a de **edição mais recente** (`LAST_EDI_1`/`CREATED_DA`), mesmo que as antigas apareçam em mais arquivos; o `manifest.json` registra o aviso e o inventário marca as outras como "versão anterior". Projetos desenhados sobre uma cópia antiga continuam valendo.
 2. Gere os dados:
    ```bash
    python scripts/build_dataset.py              # só agregados (padrão)
@@ -56,7 +56,7 @@ DATA_DIR=.fixture/real npm run dev
    ```bash
    python -m pytest
    ```
-   Os testes de `scripts/tests/test_referencia.py` comparam com os valores de referência quando os KMZ reais estão em `data/raw/`. Veja também `public/data/manifest.json` (contagens, hash de cada fonte, avisos e materiais fora do padrão).
+   Os testes de `scripts/tests/test_referencia.py` comparam com os valores do escopo **só quando a base é a mesma do escopo** (`manifest.base_hash`). Com uma base atualizada eles aparecem como pulados (`skipped`): novas extensões mudam os totais e isso não é erro. Os demais testes (limpeza, regras, privacidade) continuam valendo. Veja também `public/data/manifest.json`: contagens, data dos dados (`dados_ate`), versão da base, avisos e materiais fora do padrão.
 4. Faça commit de `public/data/`. O deploy publica sozinho a partir da `main`.
 
 O pipeline **se recusa a gravar** qualquer saída que contenha e-mail, usuário do GIS (`CREATED_US`, `LAST_EDITE`) ou URL (SharePoint, Drive, `file:///`, qualquer `http`).
