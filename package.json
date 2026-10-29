@@ -1,0 +1,51 @@
+{
+  "name": "painel-extensoes-r4",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Painel de Extensões de Rede R4 – Regional R4 Interior (RJ)",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "typecheck": "tsc -b",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "data": "python scripts/build_dataset.py",
+    "data:fixture": "python scripts/tests/make_fixture.py .fixture/raw && python scripts/build_dataset.py --raw .fixture/raw --out .fixture/data --modo completo"
+  },
+  "dependencies": {
+    "@tanstack/react-table": "8.21.3",
+    "echarts": "6.1.0",
+    "lucide-react": "1.55.0",
+    "maplibre-gl": "6.14.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "zustand": "5.0.15"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.5",
+    "@playwright/test": "1.63.0",
+    "@testing-library/react": "16.3.3",
+    "@types/geojson": "7946.0.16",
+    "@types/node": "22.10.2",
+    "@types/react": "18.3.18",
+    "@types/react-dom": "18.3.5",
+    "@vitejs/plugin-react": "4.7.0",
+    "autoprefixer": "10.6.1",
+    "eslint": "9.39.5",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-react-refresh": "0.5.5",
+    "globals": "17.11.0",
+    "jsdom": "30.1.1",
+    "postcss": "8.5.30",
+    "prettier": "3.9.8",
+    "tailwindcss": "3.4.19",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.2",
+    "vite": "6.4.5",
+    "vitest": "4.1.12"
+  }
+}
