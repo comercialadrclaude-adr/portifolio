@@ -1,0 +1,38 @@
+{
+  "_leia_me": "Ficha manual dos projetos, por arquivo de origem. Campos null aparecem como 'a preencher' no painel. Etapas válidas: Estudo, Traçado preliminar, Projeto executivo, Aprovado, Em obra, Concluído, Cadastrado no GIS. ATENÇÃO: este arquivo é público; não coloque e-mails nem telefones.",
+  "projetos": {
+    "10465905419858589746": {
+      "id": "P1",
+      "etapa": null,
+      "solicitante": null,
+      "motivo": null,
+      "ligacoes_previstas": null,
+      "custo_estimado_brl": null,
+      "responsavel": null,
+      "data_prevista": null,
+      "data_real": null
+    },
+    "744407516885019490": {
+      "id": "P2",
+      "etapa": null,
+      "solicitante": null,
+      "motivo": null,
+      "ligacoes_previstas": null,
+      "custo_estimado_brl": null,
+      "responsavel": null,
+      "data_prevista": null,
+      "data_real": null
+    },
+    "14237460672449783424": {
+      "id": "P3",
+      "etapa": null,
+      "solicitante": null,
+      "motivo": null,
+      "ligacoes_previstas": null,
+      "custo_estimado_brl": null,
+      "responsavel": null,
+      "data_prevista": null,
+      "data_real": null
+    }
+  }
+}

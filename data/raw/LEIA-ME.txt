@@ -1,0 +1,3 @@
+Coloque aqui os KMZ exportados do Google Earth (ou do GIS).
+Esta pasta é ignorada pelo git: os arquivos brutos contêm e-mails de funcionários
+e links internos e nunca devem ser publicados.

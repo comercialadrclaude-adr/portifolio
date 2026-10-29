@@ -1,0 +1,27 @@
+# Dados brutos (KMZ com e-mails e links internos) – nunca versionar
+data/raw/*
+*.kmz
+*.kml
+# Dados sintéticos gerados para testes locais
+.fixture/
+
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+.vite/
+*.local
+.env
+.env.*
+
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!data/raw/LEIA-ME.txt
