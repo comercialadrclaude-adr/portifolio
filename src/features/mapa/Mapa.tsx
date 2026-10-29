@@ -158,6 +158,7 @@ export default function Mapa() {
         relevo={relevo}
         projetos={projetos.status === 'ok' ? projetos.dados : null}
         ind={ind.status === 'ok' ? ind.dados : null}
+        comRede={completo}
         painelCamadas={
           <fieldset className="pointer-events-auto rounded-md border border-border bg-surface px-3 py-2 text-xs shadow-lg">
             <legend className="sr-only">Camadas</legend>
@@ -205,10 +206,12 @@ export default function Mapa() {
           trechos da rede.
         </p>
       )}
-      <p className="text-xs text-muted">
-        Passe o mouse ou toque num trecho para ver os atributos. A data exibida é a de cadastro no
-        GIS, não a da obra.
-      </p>
+      {completo && (
+        <p className="text-xs text-muted">
+          Passe o mouse ou toque num trecho para ver os atributos. A data exibida é a de cadastro no
+          GIS, não a da obra.
+        </p>
+      )}
     </div>
   );
 }
@@ -221,6 +224,7 @@ interface PropsMapa {
   projetos: Projetos | null;
   ind: Indicadores | null;
   painelCamadas: React.ReactNode;
+  comRede: boolean;
 }
 
 function MapaInterativo({
@@ -231,6 +235,7 @@ function MapaInterativo({
   projetos,
   ind,
   painelCamadas,
+  comRede,
 }: PropsMapa) {
   const container = useRef<HTMLDivElement>(null);
   const mapa = useRef<MapLibre | null>(null);
@@ -742,7 +747,7 @@ function MapaInterativo({
         )}
       </div>
       <div className="pointer-events-none absolute bottom-8 left-3">
-        <Legenda />
+        <Legenda comRede={comRede} />
       </div>
     </div>
   );

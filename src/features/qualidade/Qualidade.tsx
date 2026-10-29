@@ -172,25 +172,26 @@ function TabelaInconsistencias() {
         meta: { esconderNoCelular: true },
         cell: (c) => <span className="text-muted">{c.getValue()}</span>,
       }),
-      col.display({
-        id: 'csv',
-        header: () => <span className="sr-only">Baixar</span>,
-        cell: (c) => (
-          <Botao
-            icone={<Download size={14} aria-hidden />}
-            disabled={!comTrechos || c.row.original.qtd === 0 || baixando === c.row.original.codigo}
-            onClick={() => exportar(c.row.original)}
-            aria-label={`Baixar CSV: ${c.row.original.problema}`}
-            title={
-              comTrechos
-                ? 'Baixar lista de trechos em CSV'
-                : 'Disponível só com a publicação completa da base'
-            }
-          >
-            CSV
-          </Botao>
-        ),
-      }),
+      // Sem a base publicada não há lista de trechos: a coluna nem aparece.
+      ...(!comTrechos
+        ? []
+        : [
+            col.display({
+              id: 'csv',
+              header: () => <span className="sr-only">Baixar</span>,
+              cell: (c) => (
+                <Botao
+                  icone={<Download size={14} aria-hidden />}
+                  disabled={c.row.original.qtd === 0 || baixando === c.row.original.codigo}
+                  onClick={() => exportar(c.row.original)}
+                  aria-label={`Baixar CSV: ${c.row.original.problema}`}
+                  title="Baixar lista de trechos em CSV"
+                >
+                  CSV
+                </Botao>
+              ),
+            }),
+          ]),
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [comTrechos, baixando, municipio],

@@ -27,7 +27,7 @@ function Linha({
 }
 
 /** Legenda fixa no canto. Nunca só cor: tracejado = proposta; espessura = diâmetro. */
-export function Legenda() {
+export function Legenda({ comRede = true }: { comRede?: boolean }) {
   const [aberta, setAberta] = useState(true);
   return (
     <div className="pointer-events-auto rounded-md border border-border bg-surface text-xs shadow-lg">
@@ -46,18 +46,22 @@ export function Legenda() {
       </button>
       {aberta && (
         <ul className="space-y-1.5 border-t border-border px-3 py-2">
-          <li className="flex items-center gap-2">
-            <Linha cor="--net-existing" />
-            Rede existente
-          </li>
-          <li className="flex items-center gap-2">
-            <Linha cor="--net-extension" />
-            Extensão
-          </li>
-          <li className="flex items-center gap-2">
-            <Linha cor="--net-improvement" />
-            Melhoria
-          </li>
+          {comRede && (
+            <>
+              <li className="flex items-center gap-2">
+                <Linha cor="--net-existing" />
+                Rede existente
+              </li>
+              <li className="flex items-center gap-2">
+                <Linha cor="--net-extension" />
+                Extensão
+              </li>
+              <li className="flex items-center gap-2">
+                <Linha cor="--net-improvement" />
+                Melhoria
+              </li>
+            </>
+          )}
           <li className="flex items-center gap-2">
             <Linha cor="--project" largura={3} tracejada />
             Projeto proposto
@@ -90,19 +94,23 @@ export function Legenda() {
             </svg>
             ZEIS
           </li>
-          <li className="pt-1 text-muted">Espessura por diâmetro</li>
-          <li className="flex items-center gap-2">
-            <Linha cor="--text-muted" largura={1.4} />
-            até 75 mm
-          </li>
-          <li className="flex items-center gap-2">
-            <Linha cor="--text-muted" largura={2.4} />
-            76 a 150 mm
-          </li>
-          <li className="flex items-center gap-2">
-            <Linha cor="--text-muted" largura={3.6} />
-            acima de 150 mm
-          </li>
+          {comRede && (
+            <>
+              <li className="pt-1 text-muted">Espessura por diâmetro</li>
+              <li className="flex items-center gap-2">
+                <Linha cor="--text-muted" largura={1.4} />
+                até 75 mm
+              </li>
+              <li className="flex items-center gap-2">
+                <Linha cor="--text-muted" largura={2.4} />
+                76 a 150 mm
+              </li>
+              <li className="flex items-center gap-2">
+                <Linha cor="--text-muted" largura={3.6} />
+                acima de 150 mm
+              </li>
+            </>
+          )}
         </ul>
       )}
     </div>

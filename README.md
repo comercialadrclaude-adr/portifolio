@@ -70,7 +70,7 @@ O pipeline **se recusa a gravar** qualquer saída que contenha e-mail, usuário 
 | `trechos.json` (atributos limpos por trecho) | não | sim |
 | Mapa da rede e CSV de trechos com inconsistência | não | sim |
 
-Use o modo completo só depois de decidir que a base de rede pode ficar pública (ver [Privacidade](#privacidade)).
+O site publica **só os agregados** (decisão registrada em `docs/DECISOES.md`). Use o modo completo só se essa decisão mudar (ver [Privacidade](#privacidade)).
 
 ### Ficha dos projetos
 

@@ -25,6 +25,8 @@ Achados nos dados que merecem atenção da equipe:
 
 ## 2. Privacidade
 
+> **Decisão de 29/10/2026:** publicar **só os agregados**. `public/data/` foi gerado com o modo padrão (`python scripts/build_dataset.py`): sem `rede.geojson` nem `trechos.json` e sem a lista de ids por inconsistência. No site, o mapa mostra projetos, ZEIS e relevo; a aba Qualidade mostra contagens sem o CSV por trecho. Para mudar, gere com `--modo completo` e faça commit de `public/data/`.
+
 - **Lista branca de campos.** Só os campos do dicionário são publicados. `CREATED_US`, `LAST_EDITE`, `DESCRICAO` e `NOTAS` nunca saem do pipeline (`NOTAS` tem números de OS; `DESCRICAO` tem 377 links de SharePoint, 26 de Drive e 71 `file:///`).
 - **Bloqueio na gravação.** `build_dataset.py` se recusa a escrever se qualquer saída tiver e-mail, usuário do GIS ou URL. O mesmo é verificado no pytest, inclusive em `public/data/` versionado.
 - **Modo agregado como padrão.** A base de rede trecho a trecho (`rede.geojson`, `trechos.json`) só é gerada com `--modo completo`. Até a decisão sobre publicar a base, nenhum dado processado foi commitado.
@@ -78,7 +80,7 @@ Token acrescentado ao escopo: `--header-bg`/`--header-text`/`--header-muted` (ca
 
 ## 6. Performance e acessibilidade (Lighthouse 12, mobile simulado)
 
-Build de produção servido com gzip (como no GitHub Pages) e base completa:
+Build de produção servido com gzip (como no GitHub Pages) e base completa (o modo agregado publicado é mais leve, porque o mapa não baixa a rede):
 
 | Aba | Performance | Acessibilidade | Boas práticas |
 |---|---|---|---|
@@ -93,5 +95,5 @@ O que foi feito para chegar aí: fontes sem bloquear a renderização, `preload`
 
 ## 7. Processo
 
-- O escopo pede uma branch e um PR por fase. Nesta sessão o trabalho foi feito numa única branch de desenvolvimento, com commits por bloco (pipeline, painel, documentação). As fases 0 a 5 estão cobertas; falta só ativar o GitHub Pages e decidir sobre a publicação da base.
+- O escopo pede uma branch e um PR por fase. Nesta sessão o trabalho foi feito numa única branch de desenvolvimento, com commits por bloco (pipeline, painel, documentação). As fases 0 a 5 estão cobertas; falta ativar o GitHub Pages.
 - Python 3.11 na CI; o pipeline também roda em 3.13.

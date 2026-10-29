@@ -119,3 +119,32 @@ test('abas navegam por teclado', async ({ page, isMobile }, info) => {
     'true',
   );
 });
+
+test.describe('publicação só de agregados', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('**/data/manifest.json', async (r) => {
+      const resp = await r.fetch();
+      const json = await resp.json();
+      await r.fulfill({ response: resp, json: { ...json, modo: 'agregado' } });
+    });
+    await page.route('**/data/rede.geojson', (r) => r.fulfill({ status: 404 }));
+    await page.route('**/data/trechos.json', (r) => r.fulfill({ status: 404 }));
+  });
+
+  test('mapa mostra projetos e ZEIS, sem a rede', async ({ page }) => {
+    await page.goto('./?aba=mapa');
+    await expect(page.getByText(/publicada só como agregados/)).toBeVisible();
+    await expect(page.getByRole('checkbox', { name: /Rede existente/ })).toBeDisabled();
+    await expect(page.getByRole('checkbox', { name: /Projetos/ })).toBeChecked();
+    await page.waitForFunction(() => {
+      const m = (window as unknown as { __mapa?: { getLayer: (id: string) => unknown } }).__mapa;
+      return !!m?.getLayer('proj-linha') && !m.getLayer('rede-existente');
+    });
+  });
+
+  test('qualidade não oferece CSV de trechos', async ({ page }) => {
+    await page.goto('./?aba=qualidade');
+    await expect(page.getByRole('row', { name: /Material não informado/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Baixar CSV/ })).toHaveCount(0);
+  });
+});

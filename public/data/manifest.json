@@ -1,0 +1,133 @@
+{
+  "produto": "Painel de Extensões de Rede R4",
+  "organizacao": "Regional R4 – Interior (RJ)",
+  "versao_pipeline": "1.0.0",
+  "modo": "agregado",
+  "sintetico": false,
+  "dados_ate": "2025-03-12",
+  "base_usada": "11507501403838401637",
+  "avisos": [],
+  "fontes": [
+    {
+      "arquivo": "744407516885019490",
+      "sha256": "1c04f625242005945d0d71fadfd75c9d3d7f4d854faf095452e4cc71a7fd98a0",
+      "tipo": "base_projeto",
+      "feicoes": 5484
+    },
+    {
+      "arquivo": "2000817404603799060",
+      "sha256": "c0b18e4231094789ad6eb3a4ba2990cf09ed4fd6fafd3c37160ca5808baa78ad",
+      "tipo": "zeis",
+      "feicoes": 17
+    },
+    {
+      "arquivo": "2287718439252262681",
+      "sha256": "6ba7b0af1079b4fca14beb0697ce97fc29cfa7ffd8f0dd551c13af70514f9261",
+      "tipo": "vazio",
+      "feicoes": 0
+    },
+    {
+      "arquivo": "8303635062341034333",
+      "sha256": "6ba7b0af1079b4fca14beb0697ce97fc29cfa7ffd8f0dd551c13af70514f9261",
+      "tipo": "vazio",
+      "feicoes": 0
+    },
+    {
+      "arquivo": "9796505400144690222",
+      "sha256": "6ba7b0af1079b4fca14beb0697ce97fc29cfa7ffd8f0dd551c13af70514f9261",
+      "tipo": "vazio",
+      "feicoes": 0
+    },
+    {
+      "arquivo": "10465905419858589746",
+      "sha256": "7f5567502be6101788a7fe6a2f4db51cc19125d198ce7b1dbd62cf6645ad2b8a",
+      "tipo": "base_projeto",
+      "feicoes": 5485
+    },
+    {
+      "arquivo": "10492657543564464952",
+      "sha256": "6ba7b0af1079b4fca14beb0697ce97fc29cfa7ffd8f0dd551c13af70514f9261",
+      "tipo": "vazio",
+      "feicoes": 0
+    },
+    {
+      "arquivo": "11507501403838401637",
+      "sha256": "303fc827314b8e7ba18400b2ebe08e6ca99120356569bdceaa30b91c3cdcc99c",
+      "tipo": "base",
+      "feicoes": 5480
+    },
+    {
+      "arquivo": "13452378889300727770",
+      "sha256": "6ba7b0af1079b4fca14beb0697ce97fc29cfa7ffd8f0dd551c13af70514f9261",
+      "tipo": "vazio",
+      "feicoes": 0
+    },
+    {
+      "arquivo": "13495369818060600723",
+      "sha256": "d4a5ebc4ee25c27877a319d71e205658615e9aa50062e0cc9466ba9d7cd4b56e",
+      "tipo": "relevo",
+      "feicoes": 137
+    },
+    {
+      "arquivo": "14003572166819848188",
+      "sha256": "74629f8b92b49519bbb7999a7d0cbbd6599e95bbdc9ad5689f9ffe55836555c9",
+      "tipo": "base",
+      "feicoes": 5480
+    },
+    {
+      "arquivo": "14237460672449783424",
+      "sha256": "9afc0b31e19973b6bb4cdd14ca231aeaf9d19532feaf1baabc87e1bef4f7aec4",
+      "tipo": "base_projeto",
+      "feicoes": 5484
+    }
+  ],
+  "contagens": {
+    "fontes": 12,
+    "trechos": 5480,
+    "projetos": 3,
+    "zeis": 3,
+    "relevo": 137,
+    "por_tipo_arquivo": {
+      "base_projeto": 3,
+      "zeis": 1,
+      "vazio": 5,
+      "base": 2,
+      "relevo": 1
+    }
+  },
+  "materiais_outros": {
+    "PRFV_Polietileno_fibra_vidro": 3,
+    "RPVC_PVC_com_fibra_de_vidro": 3,
+    "Aco": 2,
+    "Chumbo": 2,
+    "FG_Ferro_galvanizado": 1,
+    "BIAX_PVC_orientado": 1,
+    "MPE_Mangueira_poliester": 1,
+    "PA_Poliarme": 1,
+    "CC_Concreto": 1
+  },
+  "arquivos": [
+    "inconsistencias.json",
+    "indicadores.json",
+    "portfolio.json",
+    "projetos.geojson",
+    "projetos.json",
+    "relevo.geojson",
+    "sedes.geojson",
+    "zeis.geojson",
+    "zeis.json"
+  ],
+  "gerado_em": "2026-10-29T20:23:07+00:00",
+  "conteudo_sha256": "4a2448fa5ef7efe4befe5bbbae61e3e98d9d12d8a30b529bd29015a17be6177f",
+  "tamanhos_bytes": {
+    "inconsistencias.json": 5359,
+    "indicadores.json": 51519,
+    "portfolio.json": 3146,
+    "projetos.geojson": 3270,
+    "projetos.json": 3407,
+    "relevo.geojson": 700493,
+    "sedes.geojson": 1297,
+    "zeis.geojson": 2485,
+    "zeis.json": 648
+  }
+}
