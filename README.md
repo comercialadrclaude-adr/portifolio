@@ -55,7 +55,7 @@ DATA_DIR=.fixture/real npm run dev
 - Os dados da pasta incluem a rede trecho a trecho (mapa e CSV de inconsistências), que o site publicado não traz. Eles ficam só no navegador de quem leu a pasta; as outras pessoas continuam vendo os dados publicados, a menos que leiam a pasta também.
 - Se um arquivo estiver só na nuvem (OneDrive "Arquivos Sob Demanda"), o navegador o baixa ao ler; se falhar, marque **Sempre manter neste dispositivo**.
 
-**Para atualizar o site publicado para todos**, gere os dados como abaixo e faça commit de `public/data/`. A [automação pelo GitHub com aplicativo do Azure](docs/ONEDRIVE.md) continua no repositório como alternativa, mas exige a TI.
+**Para atualizar o site publicado para todos**, gere os dados como abaixo (pela linha de comando) e faça commit de `public/data/`; o deploy publica sozinho a partir da `main`.
 
 **Pela linha de comando:**
 
