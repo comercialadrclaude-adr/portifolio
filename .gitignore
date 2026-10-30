@@ -25,3 +25,4 @@ __pycache__/
 .vscode/*
 !.vscode/extensions.json
 !data/raw/LEIA-ME.txt
+.pyodide/

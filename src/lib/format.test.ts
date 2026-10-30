@@ -3,6 +3,7 @@ import {
   A_PREENCHER,
   fmtBRL,
   fmtData,
+  fmtDataHora,
   fmtDistancia,
   fmtKm,
   fmtMes,
@@ -23,6 +24,12 @@ describe('format pt-BR', () => {
     expect(fmtData('2026-10-29')).toBe('29/10/2026');
     expect(fmtData('2025-01-01T00:00:00+00:00')).toBe('01/01/2025');
     expect(fmtData(null)).toBe(SEM_DADO);
+  });
+
+  it('formata data e hora no fuso do navegador', () => {
+    expect(fmtDataHora(new Date(2026, 9, 30, 9, 5).toISOString())).toBe('30/10/2026 às 09:05');
+    expect(fmtDataHora('lixo')).toBe(SEM_DADO);
+    expect(fmtDataHora(null)).toBe(SEM_DADO);
   });
 
   it('abrevia meses em minúsculas', () => {

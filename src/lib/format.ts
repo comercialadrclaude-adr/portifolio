@@ -46,6 +46,15 @@ export function fmtData(iso: string | null | undefined): string {
   return m ? `${m[3]}/${m[2]}/${m[1]}` : SEM_DADO;
 }
 
+/** ISO com hora → "dd/mm/aaaa às hh:mm" no fuso do navegador. */
+export function fmtDataHora(iso: string | null | undefined): string {
+  if (!iso) return SEM_DADO;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return SEM_DADO;
+  const dois = (n: number) => String(n).padStart(2, '0');
+  return `${dois(d.getDate())}/${dois(d.getMonth() + 1)}/${d.getFullYear()} às ${dois(d.getHours())}:${dois(d.getMinutes())}`;
+}
+
 export const MESES = [
   'jan',
   'fev',

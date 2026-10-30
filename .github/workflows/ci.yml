@@ -43,13 +43,18 @@ jobs:
       - run: pip install -r scripts/requirements.txt
       - run: npm run lint
       - run: npm run data:fixture
-      - name: Vitest (inclui conferência front × pipeline nos dados sintéticos)
+      # Python no navegador (Pyodide): núcleo do pacote npm + bibliotecas do jsDelivr.
+      - run: npm run pyodide:local
+      - name: Vitest (inclui front × pipeline e Pyodide × pipeline nativo, nos dados sintéticos)
         run: npm test
         env:
           DATA_DIR: .fixture/data
+          PYODIDE_INDEX_URL: ${{ github.workspace }}/.pyodide/
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+        env:
+          PYODIDE_DIR: ${{ github.workspace }}/.pyodide
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

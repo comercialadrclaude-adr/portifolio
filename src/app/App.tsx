@@ -1,9 +1,12 @@
 import { Gaveta, SkeletonPagina } from '@/components/ui';
+import { fmtDataHora } from '@/lib/format';
 import type { Manifest } from '@/types/data';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, HardDrive } from 'lucide-react';
 import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { BarraSuperior } from './BarraSuperior';
 import { useDados } from './data';
+import { origemEmFrase, useDadosLocais } from './dadosLocais';
+import { FonteDados } from './FonteDados';
 import { MenuLateral } from './MenuLateral';
 import { ROTULO_ABA, sincronizarUrl, useApp } from './store';
 
@@ -20,8 +23,15 @@ const PAINEL = 'conteudo';
 export function App() {
   const aba = useApp((s) => s.aba);
   const manifest = useDados<Manifest>('manifest.json');
+  const origem = useDadosLocais((s) => s.origem);
   const [menuAberto, setMenuAberto] = useState(false);
+  const [fonteAberta, setFonteAberta] = useState(false);
   const fecharMenu = useCallback(() => setMenuAberto(false), []);
+  const fecharFonte = useCallback(() => setFonteAberta(false), []);
+  const abrirFonte = useCallback(() => {
+    setMenuAberto(false);
+    setFonteAberta(true);
+  }, []);
 
   useEffect(() => sincronizarUrl(), []);
   useEffect(() => {
@@ -39,7 +49,7 @@ export function App() {
 
       {/* Menu lateral fixo no desktop; no celular abre por cima do conteúdo. */}
       <div className="fixed inset-y-0 left-0 z-40 hidden w-64 lg:block">
-        <MenuLateral />
+        <MenuLateral aoAtualizar={abrirFonte} />
       </div>
       <Gaveta
         aberta={menuAberto}
@@ -48,10 +58,30 @@ export function App() {
         lado="esquerda"
         largura="max-w-[288px]"
       >
-        <MenuLateral aoNavegar={fecharMenu} />
+        <MenuLateral aoNavegar={fecharMenu} aoAtualizar={abrirFonte} />
       </Gaveta>
 
       <BarraSuperior aoAbrirMenu={() => setMenuAberto(true)} />
+      <FonteDados aberta={fonteAberta} onFechar={fecharFonte} />
+
+      {origem && (
+        <div role="note" className="bg-tint-brand">
+          <p className="mx-auto flex max-w-page flex-wrap items-center gap-x-2 gap-y-1 px-4 py-2 text-xs md:px-8">
+            <HardDrive size={14} aria-hidden />
+            <span>
+              Dados {origemEmFrase(origem)}, lidos em {fmtDataHora(origem.lidoEm)}. Ficam só neste
+              navegador.
+            </span>
+            <button
+              type="button"
+              onClick={abrirFonte}
+              className="font-medium underline underline-offset-2"
+            >
+              Atualizar
+            </button>
+          </p>
+        </div>
+      )}
 
       {manifest.status === 'ok' && manifest.dados.sintetico && (
         <div role="note" className="bg-tint-warn">

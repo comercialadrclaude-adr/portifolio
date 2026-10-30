@@ -1,4 +1,4 @@
-import { fmtData, fmtInt } from '@/lib/format';
+import { fmtData, fmtDataHora, fmtInt } from '@/lib/format';
 import type { Indicadores, Inconsistencia, Manifest } from '@/types/data';
 import {
   Database,
@@ -7,12 +7,13 @@ import {
   MapPinned,
   Moon,
   ShieldCheck,
+  Loader2,
   RefreshCw,
   Sun,
   type LucideIcon,
 } from 'lucide-react';
 import { useDados } from './data';
-import { URL_ATUALIZAR_DADOS } from './config';
+import { useDadosLocais } from './dadosLocais';
 import { Marca } from './Marca';
 import { useApp, type Aba } from './store';
 import { useTema } from './theme';
@@ -25,12 +26,21 @@ const ITENS: { aba: Aba; Icone: LucideIcon; rotulo: string }[] = [
 ];
 
 /** Menu lateral escuro: marca, navegação entre as seções, data dos dados e tema. */
-export function MenuLateral({ aoNavegar }: { aoNavegar?: () => void }) {
+export function MenuLateral({
+  aoNavegar,
+  aoAtualizar,
+}: {
+  aoNavegar?: () => void;
+  aoAtualizar: () => void;
+}) {
   const aba = useApp((s) => s.aba);
   const setAba = useApp((s) => s.setAba);
   const manifest = useDados<Manifest>('manifest.json');
   const ind = useDados<Indicadores>('indicadores.json');
   const inc = useDados<Inconsistencia[]>('inconsistencias.json');
+  const origem = useDadosLocais((s) => s.origem);
+  const trabalho = useDadosLocais((s) => s.trabalho);
+  const desatualizado = useDadosLocais((s) => s.desatualizado);
   const { tema, alternar } = useTema();
 
   const contagem: Partial<Record<Aba, number>> = {
@@ -104,28 +114,51 @@ export function MenuLateral({ aoNavegar }: { aoNavegar?: () => void }) {
         <div className="rounded-lg border border-sidebar-border bg-sidebar-hover p-3">
           <div className="flex items-center gap-2 text-xs text-sidebar-muted">
             <Database size={14} aria-hidden />
-            Base cadastral do GIS
+            {origem ? 'Dados da pasta' : 'Base cadastral do GIS'}
           </div>
+          {origem && (
+            <p className="mt-1 truncate text-sm font-semibold" title={origem.nome}>
+              {origem.nome}
+            </p>
+          )}
           {dadosAte && (
-            <p className="mt-1 text-sm">
+            <p className={`${origem ? 'mt-0.5 text-xs text-sidebar-muted' : 'mt-1 text-sm'}`}>
               Dados até <span className="tabular font-semibold">{fmtData(dadosAte)}</span>
             </p>
           )}
-          {geradoEm && (
-            <p className="mt-0.5 text-xs text-sidebar-muted">Processado em {fmtData(geradoEm)}</p>
+          {origem ? (
+            <p className="mt-0.5 text-xs text-sidebar-muted">
+              Lida em {fmtDataHora(origem.lidoEm)}
+            </p>
+          ) : (
+            geradoEm && (
+              <p className="mt-0.5 text-xs text-sidebar-muted">Processado em {fmtData(geradoEm)}</p>
+            )
           )}
-          <a
-            href={URL_ATUALIZAR_DADOS}
-            target="_blank"
-            rel="noreferrer"
-            title="Abre a automação no GitHub: clique em “Run workflow” para buscar os KMZ da pasta do OneDrive. Requer acesso ao repositório."
+          {trabalho.status === 'erro' && (
+            <p role="status" className="mt-2 text-xs">
+              A última leitura falhou. Abra “Atualizar dados” para ver o motivo.
+            </p>
+          )}
+          {desatualizado && trabalho.status !== 'lendo' && (
+            <p role="status" className="mt-2 text-xs">
+              O painel foi atualizado: leia a pasta de novo.
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={aoAtualizar}
+            title="Lê a pasta do OneDrive com os KMZ, aqui no navegador, e atualiza o painel."
             className="mt-3 flex w-full items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-semibold transition-opacity hover:opacity-90"
             style={{ background: 'var(--net-extension)', color: 'var(--sidebar-bg)' }}
           >
-            <RefreshCw size={14} aria-hidden />
-            Atualizar dados
-            <span className="sr-only">(abre o GitHub em nova aba)</span>
-          </a>
+            {trabalho.status === 'lendo' ? (
+              <Loader2 size={14} aria-hidden className="animate-spin" />
+            ) : (
+              <RefreshCw size={14} aria-hidden />
+            )}
+            {trabalho.status === 'lendo' ? 'Lendo a pasta…' : 'Atualizar dados'}
+          </button>
         </div>
         <button
           type="button"
