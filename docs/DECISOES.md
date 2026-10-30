@@ -56,6 +56,16 @@ Achados nos dados que merecem atenção da equipe:
 - **CSV** com `;`, vírgula decimal e BOM UTF-8, para abrir direto no Excel em pt-BR.
 - **Popups** montados com `textContent`, nunca HTML cru: nomes vêm do Google Earth.
 
+### Revisão visual (30/10/2026)
+
+- **Hierarquia**: cada aba abre com título de página (24 px), uma linha de contexto e o filtro de município ativo como chip removível. O nome do produto no cabeçalho ganhou marca gráfica, e a data dos dados fica no cabeçalho.
+- **KPIs com referência visual**: medidores finos mostram a proporção da rede (extensões e melhorias) e a completude contra o mínimo de 50%. Os cards de rede e de projetos levam um link para a aba correspondente.
+- **Gráfico de extensões**: começa no primeiro mês com extensão (antes, 18 meses vazios desde ago/2021) e alterna entre mensal, trimestral e acumulado, além de gráfico e tabela. Só o pico leva rótulo de valor. Um rodapé traz total, maior período e trechos sem data.
+- **Rede por tipo de obra**: card novo ao lado do gráfico, com km e participação de cada tipo.
+- **Carteira**: as etapas viram um fluxo contínuo e a ficha do projeto abre numa gaveta lateral (dialog, fecha com Esc e devolve o foco), sem esticar a tabela. O inventário vem ordenado pelo que pede ação: projetos, referências, arquivar, excluir.
+- **Qualidade**: um resumo por gravidade (ocorrências e regras afetadas) abre a aba.
+- **Gaveta e popovers** são os únicos elementos com sombra; animação só na entrada da gaveta (180 ms) e respeitando `prefers-reduced-motion`.
+
 ## 5. Cores e contraste
 
 Contraste calculado com a fórmula WCAG 2.x (luminância relativa):

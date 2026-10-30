@@ -2,7 +2,7 @@ import { ComDados } from '@/app/ComDados';
 import { carregar, useDados } from '@/app/data';
 import { useApp } from '@/app/store';
 import { useIndicadorAtual } from '@/app/useMunicipio';
-import { Botao, Card, DataTable, EmptyState, Pill, type Tom } from '@/components/ui';
+import { Botao, Card, DataTable, EmptyState, PageHeader, Pill, type Tom } from '@/components/ui';
 import { baixar, nomeArquivo, paraCsv } from '@/lib/csv';
 import { fmtInt, fmtPct } from '@/lib/format';
 import { LIMIAR_PREENCHIMENTO } from '@/lib/metrics';
@@ -15,15 +15,65 @@ import type {
   Trecho,
 } from '@/types/data';
 import { createColumnHelper } from '@tanstack/react-table';
-import { AlertTriangle, Download } from 'lucide-react';
+import { AlertTriangle, Download, Info, OctagonAlert } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 export default function Qualidade() {
   const ind = useDados<Indicadores>('indicadores.json');
+  const inc = useDados<Inconsistencia[]>('inconsistencias.json');
   return (
     <div className="space-y-6">
+      <PageHeader
+        titulo="Qualidade do cadastro"
+        descricao="O que falta na base cadastral para dimensionar e orçar as extensões, por gravidade."
+      />
+      {inc.status === 'ok' && <ResumoGravidade inc={inc.dados} />}
       <ComDados estado={ind}>{(d) => <Preenchimentos ind={d} />}</ComDados>
       <TabelaInconsistencias />
+    </div>
+  );
+}
+
+const GRAVIDADES: { g: Gravidade; descricao: string; cor: string; Icone: typeof AlertTriangle }[] =
+  [
+    { g: 'Alta', descricao: 'Impedem dimensionar ou orçar', cor: '--bad', Icone: OctagonAlert },
+    { g: 'Média', descricao: 'Atrapalham relatórios', cor: '--warn', Icone: AlertTriangle },
+    { g: 'Baixa', descricao: 'Padronização de texto', cor: '--text-muted', Icone: Info },
+  ];
+
+function ResumoGravidade({ inc }: { inc: Inconsistencia[] }) {
+  const municipio = useApp((s) => s.municipio);
+  const qtd = (i: Inconsistencia) => (municipio ? (i.por_municipio[municipio] ?? 0) : i.total);
+  return (
+    <div className="grid gap-4 sm:grid-cols-3">
+      {GRAVIDADES.map(({ g, descricao, cor, Icone }) => {
+        const regras = inc.filter((i) => i.gravidade === g);
+        const ativas = regras.filter((i) => qtd(i) > 0);
+        const ocorrencias = regras.reduce((s, i) => s + qtd(i), 0);
+        return (
+          <div key={g} className="flex gap-3 rounded-md border border-border bg-surface p-5">
+            <Icone
+              size={18}
+              aria-hidden
+              className="mt-0.5 shrink-0"
+              style={{ color: `var(${cor})` }}
+            />
+            <div className="min-w-0">
+              <p className="text-sm font-medium">
+                Gravidade {g.toLowerCase()}{' '}
+                <span className="font-normal text-muted">· {descricao}</span>
+              </p>
+              <p className="mt-2 flex items-baseline gap-1.5">
+                <span className="tabular text-xl font-semibold">{fmtInt(ocorrencias)}</span>
+                <span className="text-sm text-muted">ocorrências</span>
+              </p>
+              <p className="mt-0.5 text-xs text-muted">
+                em {fmtInt(ativas.length)} de {fmtInt(regras.length)} regras
+              </p>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -46,7 +96,7 @@ function Preenchimentos({ ind }: { ind: Indicadores }) {
   return (
     <Card
       id="preenchimento"
-      titulo={`Preenchimento por atributo · ${atual.nome}`}
+      titulo="Preenchimento por atributo"
       nota={`% dos ${fmtInt(atual.trechos)} trechos com o campo informado. Diâmetro e profundidade 0 contam como não informados. Abaixo de ${LIMIAR_PREENCHIMENTO}% fica em alerta.`}
     >
       <ul className="space-y-3">
@@ -59,7 +109,7 @@ function Preenchimentos({ ind }: { ind: Indicadores }) {
             >
               <span>{ROTULO_ATRIBUTO[k]}</span>
               <span
-                className="h-3 overflow-hidden rounded-sm bg-surface-2"
+                className="h-2 overflow-hidden rounded-full bg-surface-2"
                 role="meter"
                 aria-valuemin={0}
                 aria-valuemax={100}
@@ -67,7 +117,7 @@ function Preenchimentos({ ind }: { ind: Indicadores }) {
                 aria-label={`${ROTULO_ATRIBUTO[k]}: ${fmtPct(v)} preenchido`}
               >
                 <span
-                  className="block h-full rounded-sm"
+                  className="block h-full rounded-full"
                   style={{ width: `${v}%`, background: alerta ? 'var(--warn)' : 'var(--brand)' }}
                 />
               </span>

@@ -4,7 +4,7 @@ import { useTemaAtual } from '@/app/theme';
 import { estiloVazio, ESTILO_BASE } from '@/components/map/estilos';
 import { bboxValido, comprimento } from '@/components/map/geo';
 import { Legenda } from '@/components/map/Legenda';
-import { Botao, ErrorState } from '@/components/ui';
+import { Botao, ErrorState, PageHeader } from '@/components/ui';
 import { token } from '@/lib/colors';
 import { fmtData, fmtDistancia, fmtM, fmtMm, SEM_DADO } from '@/lib/format';
 import type { Bbox, Indicadores, Manifest, Projetos, TipoObra, Trecho } from '@/types/data';
@@ -150,7 +150,15 @@ export default function Mapa() {
   if (manifest.status === 'erro') return <ErrorState onRetry={manifest.tentarDeNovo} />;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
+      <PageHeader
+        titulo="Mapa"
+        descricao={
+          completo
+            ? 'Rede cadastrada por tipo de obra e diâmetro, projetos propostos e ZEIS.'
+            : 'Projetos propostos e ZEIS. A rede trecho a trecho não é publicada (só agregados).'
+        }
+      />
       <MapaInterativo
         rede={rede}
         projetosGeo={projetosGeo.status === 'ok' ? projetosGeo.dados : null}
@@ -200,12 +208,6 @@ export default function Mapa() {
           </fieldset>
         }
       />
-      {manifest.status === 'ok' && !completo && (
-        <p className="text-xs text-muted">
-          A base cadastral está publicada só como agregados: o mapa mostra projetos e ZEIS, sem os
-          trechos da rede.
-        </p>
-      )}
       {completo && (
         <p className="text-xs text-muted">
           Passe o mouse ou toque num trecho para ver os atributos. A data exibida é a de cadastro no

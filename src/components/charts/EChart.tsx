@@ -1,16 +1,16 @@
 import { useTemaAtual } from '@/app/theme';
-import { BarChart } from 'echarts/charts';
+import { BarChart, LineChart } from 'echarts/charts';
 import { GridComponent, TooltipComponent } from 'echarts/components';
 import { init, use as registrar, type ComposeOption, type ECharts } from 'echarts/core';
-import type { BarSeriesOption } from 'echarts/charts';
+import type { BarSeriesOption, LineSeriesOption } from 'echarts/charts';
 import type { GridComponentOption, TooltipComponentOption } from 'echarts/components';
 import { SVGRenderer } from 'echarts/renderers';
 import { useEffect, useRef } from 'react';
 
-registrar([BarChart, GridComponent, TooltipComponent, SVGRenderer]);
+registrar([BarChart, LineChart, GridComponent, TooltipComponent, SVGRenderer]);
 
 export type OpcoesGrafico = ComposeOption<
-  BarSeriesOption | GridComponentOption | TooltipComponentOption
+  BarSeriesOption | LineSeriesOption | GridComponentOption | TooltipComponentOption
 >;
 
 interface Props {

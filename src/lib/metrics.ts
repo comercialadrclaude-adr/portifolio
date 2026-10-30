@@ -3,7 +3,7 @@
 // cálculo abaixo existem para conferir o pipeline nos testes (Vitest).
 
 import type { IndicadorMunicipio, Trecho } from '@/types/data';
-import { fmtKm, fmtPct } from './format';
+import { fmtKm, fmtMes, fmtPct } from './format';
 
 export const DEFINICOES = {
   rede_km: 'Soma do campo EXTENSAO de todos os trechos cadastrados, em km.',
@@ -75,3 +75,54 @@ export function picoMensal(ind: IndicadorMunicipio) {
 
 /** Limiar de alerta para preenchimento de atributos (seção 6.4). */
 export const LIMIAR_PREENCHIMENTO = 50;
+
+export type Granularidade = 'mes' | 'trimestre' | 'acumulado';
+
+export interface PontoSerie {
+  chave: string;
+  rotulo: string;
+  km: number;
+  trechos: number;
+}
+
+/**
+ * Série de extensões para o gráfico. Começa no primeiro mês com extensão e termina no
+ * último (o pipeline cobre o período de toda a base, o que deixava meses vazios no início).
+ */
+export function serieExtensoes(
+  mensal: IndicadorMunicipio['mensal'],
+  g: Granularidade,
+): PontoSerie[] {
+  const ini = mensal.findIndex((m) => m.extensoes_trechos > 0);
+  if (ini < 0) return [];
+  let fim = mensal.length - 1;
+  while (fim > ini && (mensal[fim]?.extensoes_trechos ?? 0) === 0) fim--;
+  const meses = mensal.slice(ini, fim + 1);
+
+  if (g === 'trimestre') {
+    const porTri = new Map<string, PontoSerie>();
+    for (const m of meses) {
+      const [a, mm] = m.mes.split('-');
+      const t = Math.floor((Number(mm) - 1) / 3) + 1;
+      const chave = `${a}-T${t}`;
+      const p = porTri.get(chave) ?? { chave, rotulo: `T${t}/${a}`, km: 0, trechos: 0 };
+      p.km += m.extensoes_km;
+      p.trechos += m.extensoes_trechos;
+      porTri.set(chave, p);
+    }
+    return [...porTri.values()];
+  }
+
+  let acumKm = 0;
+  let acumN = 0;
+  return meses.map((m) => {
+    acumKm += m.extensoes_km;
+    acumN += m.extensoes_trechos;
+    return {
+      chave: m.mes,
+      rotulo: fmtMes(m.mes),
+      km: g === 'acumulado' ? acumKm : m.extensoes_km,
+      trechos: g === 'acumulado' ? acumN : m.extensoes_trechos,
+    };
+  });
+}

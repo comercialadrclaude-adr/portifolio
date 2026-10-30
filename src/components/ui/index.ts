@@ -7,3 +7,7 @@ export { Pill, type Tom } from './Pill';
 export { Select } from './Select';
 export { Tabs } from './Tabs';
 export { InfoTip } from './Tooltip';
+export { Gaveta } from './Gaveta';
+export { Medidor } from './Medidor';
+export { PageHeader } from './PageHeader';
+export { Segmentado } from './Segmentado';
