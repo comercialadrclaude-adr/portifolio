@@ -7,10 +7,12 @@ import {
   MapPinned,
   Moon,
   ShieldCheck,
+  RefreshCw,
   Sun,
   type LucideIcon,
 } from 'lucide-react';
 import { useDados } from './data';
+import { URL_ATUALIZAR_DADOS } from './config';
 import { Marca } from './Marca';
 import { useApp, type Aba } from './store';
 import { useTema } from './theme';
@@ -39,6 +41,7 @@ export function MenuLateral({ aoNavegar }: { aoNavegar?: () => void }) {
         : undefined,
   };
   const dadosAte = manifest.status === 'ok' ? manifest.dados.dados_ate : null;
+  const geradoEm = manifest.status === 'ok' ? manifest.dados.gerado_em : null;
 
   return (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-text">
@@ -98,17 +101,32 @@ export function MenuLateral({ aoNavegar }: { aoNavegar?: () => void }) {
       </nav>
 
       <div className="space-y-3 p-4">
-        {dadosAte && (
-          <div className="rounded-lg border border-sidebar-border bg-sidebar-hover p-3">
-            <div className="flex items-center gap-2 text-xs text-sidebar-muted">
-              <Database size={14} aria-hidden />
-              Base cadastral do GIS
-            </div>
+        <div className="rounded-lg border border-sidebar-border bg-sidebar-hover p-3">
+          <div className="flex items-center gap-2 text-xs text-sidebar-muted">
+            <Database size={14} aria-hidden />
+            Base cadastral do GIS
+          </div>
+          {dadosAte && (
             <p className="mt-1 text-sm">
               Dados até <span className="tabular font-semibold">{fmtData(dadosAte)}</span>
             </p>
-          </div>
-        )}
+          )}
+          {geradoEm && (
+            <p className="mt-0.5 text-xs text-sidebar-muted">Processado em {fmtData(geradoEm)}</p>
+          )}
+          <a
+            href={URL_ATUALIZAR_DADOS}
+            target="_blank"
+            rel="noreferrer"
+            title="Abre a automação no GitHub: clique em “Run workflow” para buscar os KMZ da pasta do OneDrive. Requer acesso ao repositório."
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-semibold transition-opacity hover:opacity-90"
+            style={{ background: 'var(--net-extension)', color: 'var(--sidebar-bg)' }}
+          >
+            <RefreshCw size={14} aria-hidden />
+            Atualizar dados
+            <span className="sr-only">(abre o GitHub em nova aba)</span>
+          </a>
+        </div>
         <button
           type="button"
           onClick={alternar}
