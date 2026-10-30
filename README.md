@@ -46,6 +46,11 @@ DATA_DIR=.fixture/real npm run dev
 
 ## Como atualizar os dados
 
+**Pela pasta do OneDrive (automático):** coloque os KMZ na pasta configurada e use o botão **Atualizar dados** no menu do painel (abre a automação no GitHub → **Run workflow**). A automação também roda sozinha em dias úteis. Configuração e passo a passo para a TI: [`docs/ONEDRIVE.md`](docs/ONEDRIVE.md).
+
+**Manualmente:**
+
+
 1. Exporte a camada atualizada do GIS (ou os KMZ do Google Earth) para `data/raw/`. A pasta é ignorada pelo git, porque os arquivos brutos têm e-mails de funcionários e links internos. Os arquivos podem vir sem extensão: o pipeline identifica KMZ/KML pelo conteúdo. Se uma exportação nova ficar junto com cópias antigas da base, vale a de **edição mais recente** (`LAST_EDI_1`/`CREATED_DA`), mesmo que as antigas apareçam em mais arquivos; o `manifest.json` registra o aviso e o inventário marca as outras como "versão anterior". Projetos desenhados sobre uma cópia antiga continuam valendo.
 2. Gere os dados:
    ```bash
