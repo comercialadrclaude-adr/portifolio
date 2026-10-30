@@ -1,4 +1,5 @@
-import { URL_DADOS, useDados } from '@/app/data';
+import { urlArquivo, useDados } from '@/app/data';
+import { useDadosLocais } from '@/app/dadosLocais';
 import { CAMADAS, useApp, type Camada } from '@/app/store';
 import { useTemaAtual } from '@/app/theme';
 import { estiloVazio, ESTILO_BASE } from '@/components/map/estilos';
@@ -28,8 +29,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 setWorkerUrl(urlWorker);
 
 type FC = FeatureCollection<Geometry, Record<string, unknown>>;
-
-const urlDados = (arquivo: string) => new URL(URL_DADOS + arquivo, window.location.href).href;
 
 const ROTULO_CAMADA: Record<Camada, string> = {
   existente: 'Rede existente',
@@ -140,12 +139,13 @@ export default function Mapa() {
   const zeisGeo = useDados<FC>('zeis.geojson');
   const camadas = useApp((s) => s.camadas);
   const alternarCamada = useApp((s) => s.alternarCamada);
+  const fonte = useDadosLocais((s) => s.versao);
 
   const completo = manifest.status === 'ok' && manifest.dados.modo === 'completo';
   const temRelevo = manifest.status === 'ok' && manifest.dados.arquivos.includes('relevo.geojson');
   // Rede e relevo vão por URL: o worker do MapLibre baixa e interpreta fora da thread principal.
-  const rede = completo ? urlDados('rede.geojson') : null;
-  const relevo = temRelevo && camadas.includes('relevo') ? urlDados('relevo.geojson') : null;
+  const rede = completo ? urlArquivo('rede.geojson') : null;
+  const relevo = temRelevo && camadas.includes('relevo') ? urlArquivo('relevo.geojson') : null;
 
   if (manifest.status === 'erro') return <ErrorState onRetry={manifest.tentarDeNovo} />;
 
@@ -160,6 +160,7 @@ export default function Mapa() {
         }
       />
       <MapaInterativo
+        key={fonte} // refaz o mapa quando a fonte dos dados muda (publicados ↔ pasta)
         rede={rede}
         projetosGeo={projetosGeo.status === 'ok' ? projetosGeo.dados : null}
         zeisGeo={zeisGeo.status === 'ok' ? zeisGeo.dados : null}

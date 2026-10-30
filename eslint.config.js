@@ -11,6 +11,7 @@ export default tseslint.config(
       'node_modules',
       'public/data',
       '.fixture',
+      '.pyodide',
       'playwright-report',
       'test-results',
     ],

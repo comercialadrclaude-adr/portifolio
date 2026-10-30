@@ -1,4 +1,8 @@
-# Atualizar os dados a partir de uma pasta do OneDrive
+# Alternativa: atualizar o site publicado pela automação do GitHub (exige a TI)
+
+> **O caminho padrão não precisa disto.** O botão **Atualizar dados** do painel lê a pasta do OneDrive sincronizada no computador, direto no navegador, sem aplicativo no Azure nem autorização da TI (veja o [README](../README.md#como-atualizar-os-dados)). Aquele caminho atualiza o painel só para quem leu a pasta.
+>
+> Esta automação serve para quando se quiser **atualizar o site público para todos**, sem ninguém rodar nada: o GitHub baixa a pasta pela Microsoft Graph e publica os dados agregados. Como é o OneDrive da empresa, ela depende de um aplicativo registrado no Azure pela TI. Enquanto os segredos abaixo não existirem, a execução diária só registra um aviso.
 
 Fluxo depois de configurado:
 
@@ -6,7 +10,7 @@ Fluxo depois de configurado:
 2. A automação **Atualizar dados (OneDrive)** do GitHub baixa a pasta, roda o pipeline, confere os testes de regras e privacidade e publica **só os dados agregados** em `public/data/`.
 3. O site é publicado de novo. Leva de 2 a 3 minutos.
 
-A automação roda sozinha de segunda a sexta às 06:17 (Brasília). Para rodar na hora, use o botão **Atualizar dados** no menu do painel: ele abre a automação no GitHub, onde você clica em **Run workflow**. Só quem tem acesso de escrita ao repositório consegue rodar.
+A automação roda sozinha de segunda a sexta às 06:17 (Brasília). Para rodar na hora, abra **Actions → Atualizar dados (OneDrive)** no GitHub e clique em **Run workflow**. Só quem tem acesso de escrita ao repositório consegue rodar.
 
 Os KMZ brutos nunca vão para o repositório nem para o site: ficam só durante a execução, na máquina temporária do GitHub.
 

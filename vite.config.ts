@@ -1,5 +1,6 @@
 /// <reference types="vitest/config" />
-import { createReadStream, existsSync, statSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath, URL } from 'node:url';
 import react from '@vitejs/plugin-react';
@@ -37,13 +38,36 @@ function dadosLocais(): Plugin {
   };
 }
 
+/**
+ * Identifica a versão do pipeline que roda no navegador (scripts Python + ficha dos projetos).
+ * O resultado guardado no navegador só vale para a mesma assinatura: depois de uma atualização
+ * do painel, ele é descartado em vez de ser lido com um formato antigo.
+ */
+function assinaturaPipeline(): string {
+  const arquivos = [
+    'scripts/build_dataset.py',
+    'scripts/extract_kmz.py',
+    'scripts/geo.py',
+    'scripts/limpeza.py',
+    'scripts/navegador.py',
+    'scripts/quality.py',
+    'data/projetos_meta.json',
+  ];
+  const h = createHash('sha256');
+  for (const a of arquivos) h.update(readFileSync(resolve(a)));
+  return h.digest('hex').slice(0, 16);
+}
+
 // GitHub Pages publica em https://<org>.github.io/portifolio/
 export default defineConfig({
   base: BASE,
   plugins: [react(), dadosLocais()],
+  define: { __PIPELINE_ASSINATURA__: JSON.stringify(assinaturaPipeline()) },
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
+  // O worker do Pyodide é carregado como módulo (import dinâmico do Pyodide em tempo de execução).
+  worker: { format: 'es' },
   build: {
     target: 'es2022',
     chunkSizeWarningLimit: 1200,
