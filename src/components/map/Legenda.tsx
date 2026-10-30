@@ -30,7 +30,7 @@ function Linha({
 export function Legenda({ comRede = true }: { comRede?: boolean }) {
   const [aberta, setAberta] = useState(true);
   return (
-    <div className="pointer-events-auto rounded-md border border-border bg-surface text-xs shadow-lg">
+    <div className="pointer-events-auto rounded-lg border border-border bg-surface text-xs shadow-lg">
       <button
         type="button"
         onClick={() => setAberta((v) => !v)}

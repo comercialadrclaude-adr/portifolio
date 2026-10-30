@@ -164,3 +164,12 @@
 .botao-cabecalho:hover {
   background: color-mix(in srgb, var(--header-text) 12%, transparent);
 }
+.gaveta-esquerda {
+  animation: entrar-esquerda 180ms ease-out;
+}
+@keyframes entrar-esquerda {
+  from {
+    transform: translateX(-16px);
+    opacity: 0.6;
+  }
+}

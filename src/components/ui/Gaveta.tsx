@@ -1,14 +1,27 @@
 import { useEffect, useRef, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 interface Props {
   aberta: boolean;
   onFechar: () => void;
-  rotuloId: string;
+  /** id do título do painel; ou use `rotulo` quando não houver título visível. */
+  rotuloId?: string;
+  rotulo?: string;
+  lado?: 'direita' | 'esquerda';
+  largura?: string;
   children: ReactNode;
 }
 
 /** Painel lateral sobreposto (dialog). Esc ou clique fora fecha; o foco volta para onde estava. */
-export function Gaveta({ aberta, onFechar, rotuloId, children }: Props) {
+export function Gaveta({
+  aberta,
+  onFechar,
+  rotuloId,
+  rotulo,
+  lado = 'direita',
+  largura = 'max-w-[440px]',
+  children,
+}: Props) {
   const painel = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,19 +40,26 @@ export function Gaveta({ aberta, onFechar, rotuloId, children }: Props) {
   }, [aberta, onFechar]);
 
   if (!aberta) return null;
-  return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+  // Portal no <body>: o painel não herda margens nem empilhamento de quem o renderiza.
+  return createPortal(
+    <div
+      className={`fixed inset-0 z-50 flex ${lado === 'direita' ? 'justify-end' : 'justify-start'}`}
+    >
       <div aria-hidden className="absolute inset-0 bg-text opacity-25" onClick={onFechar} />
       <div
         ref={painel}
         role="dialog"
         aria-modal="true"
         aria-labelledby={rotuloId}
+        aria-label={rotuloId ? undefined : rotulo}
         tabIndex={-1}
-        className="gaveta relative h-full w-full max-w-[440px] overflow-y-auto border-l border-border bg-surface shadow-2xl outline-none"
+        className={`relative h-full w-full ${largura} overflow-y-auto shadow-2xl outline-none ${
+          lado === 'direita' ? 'gaveta border-l border-border bg-surface' : 'gaveta-esquerda'
+        }`}
       >
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

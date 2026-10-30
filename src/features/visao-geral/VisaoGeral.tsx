@@ -24,7 +24,15 @@ import {
 } from '@/lib/metrics';
 import type { IndicadorMunicipio, Indicadores, TipoObra } from '@/types/data';
 import { createColumnHelper } from '@tanstack/react-table';
-import { ArrowRight, X } from 'lucide-react';
+import {
+  ArrowRight,
+  ClipboardCheck,
+  FolderKanban,
+  Network,
+  TrendingUp,
+  Wrench,
+  X,
+} from 'lucide-react';
 import { lazy, Suspense, useMemo, useState } from 'react';
 
 // ECharts é pesado: carrega depois da frase-resumo e dos KPIs.
@@ -125,7 +133,8 @@ function Kpis({ ind }: { ind: IndicadorMunicipio }) {
         unidade="km"
         contexto={`${fmtInt(ind.trechos)} trechos na base`}
         definicao={DEFINICOES.rede_km}
-        marca="--net-existing"
+        marca="--brand"
+        icone={Network}
         rodape={<LinkAba aba="mapa">Ver no mapa</LinkAba>}
       />
       <KpiCard
@@ -135,6 +144,7 @@ function Kpis({ ind }: { ind: IndicadorMunicipio }) {
         contexto={`${fmtInt(ind.extensoes_trechos)} trechos`}
         definicao={DEFINICOES.extensoes_km}
         marca="--net-extension"
+        icone={TrendingUp}
         rodape={
           <RodapePct
             valor={ind.extensoes_pct}
@@ -151,6 +161,7 @@ function Kpis({ ind }: { ind: IndicadorMunicipio }) {
         contexto={`${fmtInt(ind.por_tipo.melhoria.trechos)} trechos`}
         definicao={DEFINICOES.melhorias_km}
         marca="--net-improvement"
+        icone={Wrench}
         rodape={
           <RodapePct
             valor={melhoriasPct}
@@ -167,6 +178,7 @@ function Kpis({ ind }: { ind: IndicadorMunicipio }) {
         contexto={`${fmtInt(ind.trechos_completos)} de ${fmtInt(ind.trechos)} trechos`}
         definicao={DEFINICOES.completude_pct}
         marca={alerta ? '--warn' : '--ok'}
+        icone={ClipboardCheck}
         rodape={
           <RodapePct
             valor={ind.completude_pct}
@@ -187,6 +199,7 @@ function Kpis({ ind }: { ind: IndicadorMunicipio }) {
         contexto={`${fmtM(ind.projetos_tracado_m)} de traçado proposto`}
         definicao={DEFINICOES.projetos}
         marca="--project"
+        icone={FolderKanban}
         rodape={<LinkAba aba="carteira">Ver carteira</LinkAba>}
       />
     </div>

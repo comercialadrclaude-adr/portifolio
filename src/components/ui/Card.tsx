@@ -15,13 +15,16 @@ export function Card({ titulo, nota, acoes, children, className = '', id }: Prop
     <section
       id={id}
       aria-labelledby={id && titulo ? `${id}-titulo` : undefined}
-      className={`min-w-0 rounded-md border border-border bg-surface p-5 md:p-6 ${className}`}
+      className={`min-w-0 rounded-xl border border-border bg-surface p-5 shadow-card md:p-6 ${className}`}
     >
       {(titulo || acoes) && (
         <header className="mb-4 flex flex-wrap items-start justify-between gap-2">
           <div className="min-w-0">
             {titulo && (
-              <h2 id={id ? `${id}-titulo` : undefined} className="text-base font-semibold">
+              <h2
+                id={id ? `${id}-titulo` : undefined}
+                className="text-base font-semibold tracking-tight"
+              >
                 {titulo}
               </h2>
             )}

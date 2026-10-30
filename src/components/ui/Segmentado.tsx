@@ -25,7 +25,7 @@ export function Segmentado<T extends string>({ rotulo, opcoes, valor, onChange }
     <div
       role="radiogroup"
       aria-label={rotulo}
-      className="inline-flex rounded-md border border-border bg-surface-2 p-0.5"
+      className="inline-flex rounded-lg border border-border bg-surface-2 p-0.5"
     >
       {opcoes.map((o, i) => {
         const sel = o.valor === valor;
@@ -41,7 +41,7 @@ export function Segmentado<T extends string>({ rotulo, opcoes, valor, onChange }
             tabIndex={sel ? 0 : -1}
             onClick={() => onChange(o.valor)}
             onKeyDown={(e) => teclado(e, i)}
-            className={`h-7 rounded px-2.5 text-xs font-medium transition-colors ${
+            className={`h-7 rounded-md px-2.5 text-xs font-medium transition-colors ${
               sel ? 'bg-surface text-text shadow-sm' : 'text-muted hover:text-text'
             }`}
           >

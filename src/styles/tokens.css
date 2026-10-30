@@ -2,10 +2,10 @@
 :root,
 :root[data-theme='light'] {
   color-scheme: light;
-  --bg: #f5f7f9;
+  --bg: #f3f5f8;
   --surface: #ffffff;
   --surface-2: #eef2f5;
-  --border: #dde3e8;
+  --border: #e2e7ed;
   --text: #13212c;
   --text-muted: #5a6b78;
   --brand: #0b4f71;
@@ -13,6 +13,14 @@
   --header-bg: #0b4f71;
   --header-text: #ffffff;
   --header-muted: #c5d9e4;
+  --sidebar-bg: #0c2131;
+  --sidebar-text: #e6edf2;
+  --sidebar-muted: #93a9b9;
+  --sidebar-hover: #15304a;
+  --sidebar-active: #1b3a55;
+  --sidebar-border: #1a3347;
+  --shadow-card: 0 1px 2px rgb(16 24 40 / 0.05), 0 1px 3px rgb(16 24 40 / 0.07);
+  --shadow-card-hover: 0 4px 12px rgb(16 24 40 / 0.08), 0 2px 4px rgb(16 24 40 / 0.05);
   --net-existing: #a7b4bf;
   --net-extension: #0e9f8e;
   --net-improvement: #5b5fc7;
@@ -36,6 +44,14 @@
   --header-bg: #151f27;
   --header-text: #e6edf2;
   --header-muted: #93a4b1;
+  --sidebar-bg: #0a1117;
+  --sidebar-text: #e6edf2;
+  --sidebar-muted: #8a9cab;
+  --sidebar-hover: #131d25;
+  --sidebar-active: #1a2731;
+  --sidebar-border: #1c2832;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-card-hover: 0 4px 12px rgb(0 0 0 / 0.35);
   --net-existing: #4f5f6b;
   --net-extension: #2cc7b4;
   --net-improvement: #8f93f0;

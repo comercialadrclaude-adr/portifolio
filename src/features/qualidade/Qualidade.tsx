@@ -51,13 +51,20 @@ function ResumoGravidade({ inc }: { inc: Inconsistencia[] }) {
         const ativas = regras.filter((i) => qtd(i) > 0);
         const ocorrencias = regras.reduce((s, i) => s + qtd(i), 0);
         return (
-          <div key={g} className="flex gap-3 rounded-md border border-border bg-surface p-5">
-            <Icone
-              size={18}
+          <div
+            key={g}
+            className="flex gap-4 rounded-xl border border-border bg-surface p-5 shadow-card"
+          >
+            <span
               aria-hidden
-              className="mt-0.5 shrink-0"
-              style={{ color: `var(${cor})` }}
-            />
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+              style={{
+                background: `color-mix(in srgb, var(${cor}) 14%, transparent)`,
+                color: `var(${cor})`,
+              }}
+            >
+              <Icone size={20} />
+            </span>
             <div className="min-w-0">
               <p className="text-sm font-medium">
                 Gravidade {g.toLowerCase()}{' '}

@@ -66,6 +66,17 @@ Achados nos dados que merecem atenção da equipe:
 - **Qualidade**: um resumo por gravidade (ocorrências e regras afetadas) abre a aba.
 - **Gaveta e popovers** são os únicos elementos com sombra; animação só na entrada da gaveta (180 ms) e respeitando `prefers-reduced-motion`.
 
+### Layout SaaS com menu lateral (30/10/2026)
+
+A pedido do usuário, o visual deixou parte das regras de sobriedade do escopo (seção 7) para ficar com cara de produto:
+
+- **Menu lateral escuro fixo** (`--sidebar-*`) com ícones, contadores (projetos; regras de gravidade alta) e a data da base; no celular abre como gaveta pelo botão de menu. Ele substitui as abas no topo.
+- **Barra superior** com trilha ("Regional R4 › seção") e o filtro de município.
+- **Cards** com raio de 12 px e sombra suave (`--shadow-card`), que antes só era permitida em popovers. KPIs e resumo por gravidade ganharam ícone num chip tingido com a cor do indicador.
+- **Tabelas** com faixa de cabeçalho em `--surface-2`.
+- **Gaveta** renderizada num portal no `<body>`, para não herdar margens de quem a abre.
+- Continuam valendo: cores só por tokens, contraste AA (menu: texto secundário 6,7:1, item ativo 4,8:1), nada de gradiente, e as cores de tipo de obra iguais em mapa, gráfico e legenda.
+
 ## 5. Cores e contraste
 
 Contraste calculado com a fórmula WCAG 2.x (luminância relativa):

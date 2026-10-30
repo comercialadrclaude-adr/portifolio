@@ -168,7 +168,7 @@ export default function Mapa() {
         ind={ind.status === 'ok' ? ind.dados : null}
         comRede={completo}
         painelCamadas={
-          <fieldset className="pointer-events-auto rounded-md border border-border bg-surface px-3 py-2 text-xs shadow-lg">
+          <fieldset className="pointer-events-auto rounded-lg border border-border bg-surface px-3 py-2 text-xs shadow-lg">
             <legend className="sr-only">Camadas</legend>
             <p aria-hidden className="mb-1 font-medium">
               Camadas
@@ -698,7 +698,7 @@ function MapaInterativo({
   const distancia = comprimento(pontos);
 
   return (
-    <div className="relative h-[70vh] min-h-[420px] overflow-hidden rounded-md border border-border bg-surface-2">
+    <div className="relative h-[72vh] min-h-[440px] overflow-hidden rounded-xl border border-border bg-surface-2 shadow-card">
       <div
         ref={container}
         className="h-full w-full"
@@ -730,7 +730,7 @@ function MapaInterativo({
         {medindo && (
           <div
             role="status"
-            className="pointer-events-auto rounded-md border border-border bg-surface px-3 py-2 text-xs shadow-lg"
+            className="pointer-events-auto rounded-lg border border-border bg-surface px-3 py-2 text-xs shadow-lg"
           >
             <p className="tabular text-sm font-semibold">
               {pontos.length > 1 ? fmtDistancia(distancia) : 'Clique no mapa'}
