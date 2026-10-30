@@ -4,7 +4,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { Indicadores, Manifest, Trecho } from '@/types/data';
-import { calcularIndicadores, fraseResumo } from './metrics';
+import { calcularIndicadores, fraseResumo, serieExtensoes } from './metrics';
 
 const t = (p: Partial<Trecho>): Trecho => ({
   id: 'T1',
@@ -85,5 +85,40 @@ describe.skipIf(!temDados)(`dados gerados em ${dir}`, () => {
     expect(ind.todos.melhorias_km).toBeCloseTo(297.5, 1);
     expect(ind.todos.completude_pct).toBeCloseTo(54.3, 1);
     expect(ind.municipios[0]).toMatchObject({ nome: 'São Francisco de Itabapoana', trechos: 896 });
+  });
+});
+
+describe('série de extensões', () => {
+  const mensal = [
+    { mes: '2023-01', extensoes_km: 0, extensoes_trechos: 0 },
+    { mes: '2023-02', extensoes_km: 1, extensoes_trechos: 2 },
+    { mes: '2023-03', extensoes_km: 0, extensoes_trechos: 0 },
+    { mes: '2023-04', extensoes_km: 3, extensoes_trechos: 1 },
+    { mes: '2023-05', extensoes_km: 0, extensoes_trechos: 0 },
+  ];
+
+  it('corta meses vazios nas pontas e mantém os do meio', () => {
+    expect(serieExtensoes(mensal, 'mes').map((p) => p.rotulo)).toEqual([
+      'fev/2023',
+      'mar/2023',
+      'abr/2023',
+    ]);
+  });
+
+  it('agrega por trimestre', () => {
+    expect(serieExtensoes(mensal, 'trimestre')).toEqual([
+      { chave: '2023-T1', rotulo: 'T1/2023', km: 1, trechos: 2 },
+      { chave: '2023-T2', rotulo: 'T2/2023', km: 3, trechos: 1 },
+    ]);
+  });
+
+  it('acumula', () => {
+    expect(serieExtensoes(mensal, 'acumulado').map((p) => p.km)).toEqual([1, 1, 4]);
+  });
+
+  it('série vazia sem extensões', () => {
+    expect(
+      serieExtensoes([{ mes: '2023-01', extensoes_km: 0, extensoes_trechos: 0 }], 'mes'),
+    ).toEqual([]);
   });
 });

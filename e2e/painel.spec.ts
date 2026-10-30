@@ -20,7 +20,7 @@ test('visão geral mostra KPIs, gráfico e comparativo', async ({ page }) => {
   await expect(page.getByText('Rede cadastrada', { exact: true })).toBeVisible();
   // 4,6 km da base sintética (scripts/tests/make_fixture.py)
   await expect(page.locator('p strong').first()).toHaveText('4,6 km');
-  await expect(page.getByRole('img', { name: /km de extensão por mês/ })).toBeVisible();
+  await expect(page.getByRole('img', { name: /Extensões por mês de cadastro/ })).toBeVisible();
   await expect(page.getByRole('table', { name: 'Indicadores por município' })).toBeVisible();
   await semRolagemHorizontal(page);
 });
@@ -39,13 +39,14 @@ test('link com filtro abre no mesmo estado', async ({ page }) => {
       .getByRole('tab', { name: 'Qualidade do cadastro', selected: true })
       .or(page.getByRole('combobox', { name: 'Seção' })),
   ).toBeVisible();
-  await expect(page.getByText('Preenchimento por atributo · Município A')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Qualidade do cadastro' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Remover filtro de Município A' })).toBeVisible();
 });
 
 test('carteira mostra ficha com campos a preencher e prioridade', async ({ page }) => {
   await page.goto('./?aba=carteira');
   await page.getByRole('row', { name: /Ver ficha de P1/ }).click();
-  const ficha = page.getByRole('complementary');
+  const ficha = page.getByRole('dialog');
   await expect(ficha.getByRole('heading', { name: 'Extensão de Teste' })).toBeVisible();
   await expect(ficha.getByText('a preencher').first()).toBeVisible();
   await expect(ficha.getByRole('heading', { name: 'Índice de prioridade' })).toBeVisible();
@@ -133,7 +134,7 @@ test.describe('publicação só de agregados', () => {
 
   test('mapa mostra projetos e ZEIS, sem a rede', async ({ page }) => {
     await page.goto('./?aba=mapa');
-    await expect(page.getByText(/publicada só como agregados/)).toBeVisible();
+    await expect(page.getByText(/não é publicada/)).toBeVisible();
     await expect(page.getByRole('checkbox', { name: /Rede existente/ })).toBeDisabled();
     await expect(page.getByRole('checkbox', { name: /Projetos/ })).toBeChecked();
     await page.waitForFunction(() => {
@@ -147,4 +148,24 @@ test.describe('publicação só de agregados', () => {
     await expect(page.getByRole('row', { name: /Material não informado/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /Baixar CSV/ })).toHaveCount(0);
   });
+});
+
+test('ficha do projeto fecha com Esc e devolve o foco', async ({ page }) => {
+  await page.goto('./?aba=carteira');
+  const linha = page.getByRole('row', { name: /Ver ficha de P1/ });
+  await linha.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(page).not.toHaveURL(/projeto=/);
+  await expect(linha).toBeFocused();
+});
+
+test('gráfico alterna entre mensal, trimestral e acumulado', async ({ page }) => {
+  await page.goto('./');
+  await page.getByRole('radio', { name: 'Trimestral' }).click();
+  await expect(page.getByRole('img', { name: /Extensões por trimestre/ })).toBeVisible();
+  await page.getByRole('radio', { name: 'Tabela' }).click();
+  await expect(page.getByRole('cell', { name: 'T1/2024' })).toBeVisible();
 });

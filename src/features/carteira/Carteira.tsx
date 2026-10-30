@@ -1,14 +1,14 @@
 import { ComDados } from '@/app/ComDados';
 import { useDados } from '@/app/data';
 import { useApp } from '@/app/store';
-import { Card, DataTable, EmptyState, Pill } from '@/components/ui';
+import { Card, DataTable, EmptyState, Gaveta, PageHeader, Pill } from '@/components/ui';
 import { fmtDistancia, fmtInt, fmtM, fmtNum } from '@/lib/format';
 import { DEFINICOES } from '@/lib/metrics';
 import { calcularPrioridade } from '@/lib/priority';
 import type { ItemPortfolio, Projeto, Projetos, Zeis } from '@/types/data';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Map as IconeMapa } from 'lucide-react';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Detalhe } from './Detalhe';
 import { TOM_ETAPA, TOM_USO } from './etapas';
 import { Funil } from './Funil';
@@ -41,6 +41,7 @@ function Projetos({ dados }: { dados: Projetos }) {
     [dados, municipio],
   );
   const atual = dados.projetos.find((p) => p.id === selecionado) ?? null;
+  const fecharFicha = useCallback(() => setProjeto(null), [setProjeto]);
 
   const colunas = useMemo(
     () => [
@@ -117,18 +118,30 @@ function Projetos({ dados }: { dados: Projetos }) {
 
   return (
     <>
+      <PageHeader
+        titulo="Carteira de projetos"
+        descricao={
+          <>
+            <span className="tabular font-medium text-text">{fmtInt(linhas.length)}</span>{' '}
+            {linhas.length === 1 ? 'projeto' : 'projetos'} ·{' '}
+            <span className="tabular font-medium text-text">
+              {fmtM(linhas.reduce((s, p) => s + p.tracado_m, 0))}
+            </span>{' '}
+            de traçado proposto ·{' '}
+            <span className="tabular font-medium text-text">
+              {fmtInt(linhas.reduce((s, p) => s + p.pendencias.length, 0))}
+            </span>{' '}
+            pendências antes de aprovar
+          </>
+        }
+      />
       <Card
-        titulo="Etapas"
-        nota="Estudo → Traçado preliminar → Projeto executivo → Aprovado → Em obra → Concluído → Cadastrado no GIS."
+        id="projetos"
+        titulo="Projetos"
+        nota="Clique numa linha para abrir a ficha com pendências e índice de prioridade."
       >
         <Funil etapas={dados.etapas} projetos={linhas} />
-      </Card>
-      <div className={`grid gap-6 ${atual ? 'lg:grid-cols-[minmax(0,1fr)_380px]' : ''}`}>
-        <Card
-          id="projetos"
-          titulo="Carteira de projetos"
-          nota={`${fmtInt(linhas.length)} projetos · ${fmtM(linhas.reduce((s, p) => s + p.tracado_m, 0))} de traçado. Clique para ver a ficha.`}
-        >
+        <div className="mt-6">
           {linhas.length === 0 ? (
             <EmptyState titulo="Nenhum projeto neste município.">
               Escolha “Todos os municípios” para ver a carteira completa.
@@ -145,17 +158,13 @@ function Projetos({ dados }: { dados: Projetos }) {
               busca
             />
           )}
-        </Card>
+        </div>
+      </Card>
+      <Gaveta aberta={!!atual} onFechar={fecharFicha} rotuloId="detalhe-titulo">
         {atual && (
-          <div className="lg:sticky lg:top-4 lg:self-start">
-            <Detalhe
-              projeto={atual}
-              onFechar={() => setProjeto(null)}
-              onMapa={() => abrirNoMapa(atual.id)}
-            />
-          </div>
+          <Detalhe projeto={atual} onFechar={fecharFicha} onMapa={() => abrirNoMapa(atual.id)} />
         )}
-      </div>
+      </Gaveta>
     </>
   );
 }
@@ -220,6 +229,8 @@ function TabelaZeis() {
 }
 
 const ci = createColumnHelper<ItemPortfolio>();
+// O que pede ação primeiro: projetos, depois referências, por fim o que pode sair.
+const ORDEM_USO = ['Projeto', 'Referência', 'Arquivar', 'Excluir'];
 
 function Inventario() {
   const port = useDados<ItemPortfolio[]>('portfolio.json');
@@ -258,7 +269,7 @@ function Inventario() {
       <ComDados estado={port}>
         {(d) => (
           <DataTable
-            dados={d}
+            dados={[...d].sort((a, b) => ORDEM_USO.indexOf(a.uso) - ORDEM_USO.indexOf(b.uso))}
             colunas={colunas}
             legenda="Inventário dos arquivos do portfólio"
             getRowId={(x) => x.arquivo}

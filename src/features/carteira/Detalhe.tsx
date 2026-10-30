@@ -63,10 +63,7 @@ export function Detalhe({ projeto: p, onFechar, onMapa }: Props) {
   ];
 
   return (
-    <aside
-      aria-labelledby="detalhe-titulo"
-      className="rounded-md border border-border bg-surface p-5 md:p-6"
-    >
+    <aside aria-labelledby="detalhe-titulo" className="p-6">
       <header className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="font-mono text-xs text-muted">{p.id}</p>

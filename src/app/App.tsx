@@ -35,7 +35,7 @@ export function App() {
         Pular para o conteúdo
       </a>
       <Cabecalho />
-      <nav className="border-b border-border bg-surface" aria-label="Seções">
+      <nav className="sticky top-0 z-40 border-b border-border bg-surface" aria-label="Seções">
         <div className="mx-auto max-w-page px-4 py-2 sm:py-0 md:px-8">
           <Tabs abas={ABAS} rotulos={ROTULO_ABA} ativa={aba} onChange={setAba} idPainel={PAINEL} />
         </div>
@@ -48,7 +48,7 @@ export function App() {
           </p>
         </div>
       )}
-      <main className="mx-auto max-w-page px-4 py-6 md:px-8 md:py-8">
+      <main className="mx-auto max-w-page px-4 pb-12 pt-6 md:px-8 md:pt-8">
         <div id={PAINEL} role="tabpanel" aria-labelledby={`aba-${aba}`} tabIndex={-1}>
           <Suspense fallback={<SkeletonPagina />}>
             {aba === 'visao-geral' && <VisaoGeral />}
@@ -58,14 +58,17 @@ export function App() {
           </Suspense>
         </div>
       </main>
-      <footer className="mx-auto max-w-page px-4 pb-8 text-xs text-muted md:px-8">
-        {manifest.status === 'ok' && (
-          <p>
-            Fonte: base cadastral exportada do GIS e projetos do Google Earth · pipeline v
-            {manifest.dados.versao_pipeline} · {manifest.dados.contagens.fontes as number} arquivos
-            {manifest.dados.modo === 'agregado' && ' · publicação somente de agregados'}
-          </p>
-        )}
+      <footer className="border-t border-border">
+        <div className="mx-auto flex max-w-page flex-wrap justify-between gap-x-6 gap-y-1 px-4 py-5 text-xs text-muted md:px-8">
+          <p>Regional R4 – Interior (RJ) · Expansão de rede de água</p>
+          {manifest.status === 'ok' && (
+            <p>
+              Fonte: base cadastral do GIS e projetos do Google Earth · pipeline v
+              {manifest.dados.versao_pipeline}
+              {manifest.dados.modo === 'agregado' && ' · publicação somente de agregados'}
+            </p>
+          )}
+        </div>
       </footer>
     </div>
   );
