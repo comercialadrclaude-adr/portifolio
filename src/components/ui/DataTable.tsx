@@ -88,12 +88,12 @@ export function DataTable<T>({
           />
         </div>
       )}
-      <div className="-mx-5 overflow-x-auto px-5 md:-mx-6 md:px-6">
+      <div className="-mx-5 overflow-x-auto md:-mx-6">
         <table className="w-full text-sm">
           <caption className="sr-only">{legenda}</caption>
           <thead>
             {tabela.getHeaderGroups().map((hg) => (
-              <tr key={hg.id} className="border-b border-border">
+              <tr key={hg.id} className="border-b border-border bg-surface-2">
                 {hg.headers.map((h) => {
                   const meta = h.column.columnDef.meta;
                   const ord = h.column.getIsSorted();
@@ -105,7 +105,7 @@ export function DataTable<T>({
                       aria-sort={
                         ord === 'asc' ? 'ascending' : ord === 'desc' ? 'descending' : undefined
                       }
-                      className={`whitespace-nowrap px-2 py-2 text-xs font-medium text-muted first:pl-0 last:pr-0 ${
+                      className={`whitespace-nowrap px-3 py-2.5 text-xs font-semibold text-muted first:pl-5 last:pr-5 md:first:pl-6 md:last:pr-6 ${
                         meta?.numerica ? 'text-right' : 'text-left'
                       } ${meta?.esconderNoCelular ? 'hidden md:table-cell' : ''}`}
                     >
@@ -161,7 +161,7 @@ export function DataTable<T>({
                     return (
                       <td
                         key={c.id}
-                        className={`px-2 py-2.5 align-middle first:pl-0 last:pr-0 ${
+                        className={`px-3 py-3 align-middle first:pl-5 last:pr-5 md:first:pl-6 md:last:pr-6 ${
                           meta?.numerica ? 'tabular whitespace-nowrap text-right' : ''
                         } ${meta?.esconderNoCelular ? 'hidden md:table-cell' : ''}`}
                       >

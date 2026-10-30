@@ -49,7 +49,7 @@ export function InfoTip({ rotulo, children }: Props) {
         <span
           id={id}
           role="tooltip"
-          className="absolute left-1/2 top-6 z-30 w-64 -translate-x-1/2 rounded-md border border-border bg-surface p-3 text-xs font-normal text-text shadow-lg"
+          className="absolute left-1/2 top-6 z-30 w-64 -translate-x-1/2 rounded-lg border border-border bg-surface p-3 text-xs font-normal text-text shadow-lg"
         >
           {children}
         </span>

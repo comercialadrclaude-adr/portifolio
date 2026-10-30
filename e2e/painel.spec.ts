@@ -34,11 +34,6 @@ test('clicar num município filtra e vai para a URL', async ({ page }) => {
 
 test('link com filtro abre no mesmo estado', async ({ page }) => {
   await page.goto('./?aba=qualidade&municipio=Munic%C3%ADpio%20A');
-  await expect(
-    page
-      .getByRole('tab', { name: 'Qualidade do cadastro', selected: true })
-      .or(page.getByRole('combobox', { name: 'Seção' })),
-  ).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Qualidade do cadastro' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Remover filtro de Município A' })).toBeVisible();
 });
@@ -101,24 +96,34 @@ test('qualidade baixa CSV de inconsistências', async ({ page }) => {
   expect(texto).not.toMatch(/@|https?:\/\/|file:\/\//);
 });
 
+/** No celular o menu lateral fica atrás do botão "Abrir menu". */
+async function abrirMenuSePreciso(page: Page) {
+  const botao = page.getByRole('button', { name: 'Abrir menu' });
+  if (await botao.isVisible()) await botao.click();
+}
+
 test('tema escuro alterna e persiste', async ({ page }) => {
   await page.goto('./');
+  await abrirMenuSePreciso(page);
   await page.getByRole('button', { name: 'Usar tema escuro' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 });
 
-test('abas navegam por teclado', async ({ page, isMobile }, info) => {
-  test.skip(info.project.name === 'celular', 'no celular as abas viram um seletor');
-  void isMobile;
+test('menu lateral navega entre as seções', async ({ page }) => {
   await page.goto('./');
-  await page.getByRole('tab', { name: 'Visão geral' }).focus();
-  await page.keyboard.press('ArrowRight');
-  await expect(page.getByRole('tab', { name: 'Carteira de projetos' })).toHaveAttribute(
-    'aria-selected',
-    'true',
+  await abrirMenuSePreciso(page);
+  const menu = page.getByRole('navigation', { name: 'Seções do painel' });
+  await expect(menu.getByRole('button', { name: /Visão geral/ })).toHaveAttribute(
+    'aria-current',
+    'page',
   );
+  await menu.getByRole('button', { name: /Carteira de projetos/ }).click();
+  await expect(page).toHaveURL(/aba=carteira/);
+  await expect(page.getByRole('heading', { name: 'Carteira de projetos', level: 1 })).toBeVisible();
+  // no celular o menu fecha depois de navegar
+  await expect(page.getByRole('dialog', { name: 'Menu' })).toHaveCount(0);
 });
 
 test.describe('publicação só de agregados', () => {

@@ -22,7 +22,7 @@ export function SkeletonPagina() {
 
 export function EmptyState({ titulo, children }: { titulo: string; children?: ReactNode }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-md border border-dashed border-border px-6 py-10 text-center">
+    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border px-6 py-10 text-center">
       <Inbox size={20} aria-hidden className="text-muted" />
       <p className="mt-2 text-sm font-medium">{titulo}</p>
       {children && <div className="mt-1 max-w-md text-xs text-muted">{children}</div>}
@@ -34,7 +34,7 @@ export function ErrorState({ onRetry, detalhe }: { onRetry: () => void; detalhe?
   return (
     <div
       role="alert"
-      className="flex flex-col items-center justify-center rounded-md border border-border bg-surface px-6 py-10 text-center"
+      className="flex flex-col items-center justify-center rounded-xl border border-border bg-surface px-6 py-10 text-center shadow-card"
     >
       <AlertTriangle size={20} aria-hidden style={{ color: 'var(--bad)' }} />
       <p className="mt-2 text-sm font-medium">Falha ao carregar</p>

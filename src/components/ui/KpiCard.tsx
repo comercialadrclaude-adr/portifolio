@@ -1,3 +1,4 @@
+import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { InfoTip } from './Tooltip';
 
@@ -7,29 +8,44 @@ interface Props {
   unidade?: string;
   contexto?: ReactNode;
   definicao: string;
-  /** Marca com a cor do tipo de obra (identidade, nunca só cor). */
+  /** Token da cor do indicador (ex.: '--net-extension'), usado no chip do ícone. */
   marca?: string;
+  icone?: LucideIcon;
   /** Medidor ou link no pé do card. */
   rodape?: ReactNode;
 }
 
-export function KpiCard({ rotulo, valor, unidade, contexto, definicao, marca, rodape }: Props) {
+export function KpiCard({
+  rotulo,
+  valor,
+  unidade,
+  contexto,
+  definicao,
+  marca = '--brand',
+  icone: Icone,
+  rodape,
+}: Props) {
   return (
-    <div className="flex min-w-0 flex-col rounded-md border border-border bg-surface p-5">
-      <div className="flex items-center gap-2 text-sm text-muted">
-        {marca && (
+    <div className="flex min-w-0 flex-col rounded-xl border border-border bg-surface p-5 shadow-card transition-shadow hover:shadow-card-hover">
+      <div className="flex items-start justify-between gap-2">
+        {Icone ? (
           <span
             aria-hidden
-            className="h-2 w-2 shrink-0 rounded-full"
-            style={{ background: `var(${marca})` }}
-          />
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
+            style={{
+              background: `color-mix(in srgb, var(${marca}) 14%, transparent)`,
+              color: `var(${marca})`,
+            }}
+          >
+            <Icone size={18} strokeWidth={2} />
+          </span>
+        ) : (
+          <span />
         )}
-        <span className="truncate font-medium">{rotulo}</span>
-        <span className="ml-auto">
-          <InfoTip rotulo={rotulo}>{definicao}</InfoTip>
-        </span>
+        <InfoTip rotulo={rotulo}>{definicao}</InfoTip>
       </div>
-      <div className="mt-3 flex items-baseline gap-1.5">
+      <p className="mt-3 text-sm font-medium text-muted">{rotulo}</p>
+      <div className="mt-1 flex items-baseline gap-1.5">
         <span className="tabular text-kpi font-semibold tracking-tight">{valor}</span>
         {unidade && <span className="text-base font-medium text-muted">{unidade}</span>}
       </div>
